@@ -1,0 +1,1388 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>CA Final Revision Tracker</title>
+<link rel="preconnect" href="https://fonts.googleapis.com"/>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin/>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@600;700;800&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700&display=swap" rel="stylesheet"/>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react/18.2.0/umd/react.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/react-dom/18.2.0/umd/react-dom.production.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/babel-standalone/7.23.2/babel.min.js"></script>
+<style>
+  /* ── CSS Variables: Light & Dark ── */
+  :root {
+    --bg-page:#f7f4ef; --bg-card:#ffffff; --bg-card2:#faf8f5;
+    --bg-input:#faf8f5; --bg-btn:#f5f5f4; --bg-header:#ffffff;
+    --border-main:#ede9e3; --border-btn:#e7e5e4; --border-dashed:#d4cdc5;
+    --text-primary:#1c1917; --text-secondary:#57534e;
+    --text-muted:#a09890; --text-subtle:#78716c;
+    --shadow-card:rgba(0,0,0,0.04); --placeholder:#b5aca0;
+    --cta-bg:#1c1917; --cta-text:#fff; --cta-loading:#d6d3d1;
+    --prog-track:#ede9e3;
+  }
+  [data-theme="dark"] {
+    --bg-page:#0f0e0d; --bg-card:#1c1917; --bg-card2:#221f1c;
+    --bg-input:#262220; --bg-btn:#292524; --bg-header:#181614;
+    --border-main:#2d2a27; --border-btn:#3d3a37; --border-dashed:#3d3a37;
+    --text-primary:#fafaf9; --text-secondary:#c4bdb7;
+    --text-muted:#78716c; --text-subtle:#57534e;
+    --shadow-card:rgba(0,0,0,0.3); --placeholder:#57534e;
+    --cta-bg:#fafaf9; --cta-text:#1c1917; --cta-loading:#3d3a37;
+    --prog-track:#2d2a27;
+  }
+
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    background:var(--bg-page);
+    font-family:'DM Sans',sans-serif;
+    color:var(--text-primary);
+    -webkit-font-smoothing:antialiased;
+    transition:background 0.25s ease,color 0.25s ease;
+  }
+  ::-webkit-scrollbar{width:5px;height:5px}
+  ::-webkit-scrollbar-track{background:var(--border-main)}
+  ::-webkit-scrollbar-thumb{background:var(--text-muted);border-radius:10px}
+  textarea,input,button{font-family:'DM Sans',sans-serif}
+  input::placeholder,textarea::placeholder{color:var(--placeholder)}
+
+  @keyframes fadeUp{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes scaleIn{from{opacity:0;transform:scale(0.96)}to{opacity:1;transform:scale(1)}}
+  @keyframes spin{from{transform:rotate(0deg)}to{transform:rotate(360deg)}}
+  @keyframes pulse{0%,100%{opacity:1}50%{opacity:.5}}
+
+  .fade-up{animation:fadeUp 0.35s ease both}
+  .fade-up:nth-child(1){animation-delay:0.04s}
+  .fade-up:nth-child(2){animation-delay:0.09s}
+  .fade-up:nth-child(3){animation-delay:0.14s}
+  .fade-up:nth-child(4){animation-delay:0.19s}
+  .fade-up:nth-child(5){animation-delay:0.24s}
+  .fade-up:nth-child(6){animation-delay:0.29s}
+
+  .auth-input{
+    width:100%;background:var(--bg-input);border:1.5px solid var(--border-btn);
+    border-radius:11px;padding:11px 14px;font-size:0.88rem;outline:none;
+    color:var(--text-primary);font-family:'DM Sans',sans-serif;
+    transition:border-color 0.18s,box-shadow 0.18s,background 0.25s,color 0.25s;
+  }
+  .auth-input:focus{border-color:#b45309;box-shadow:0 0 0 3px rgba(180,83,9,0.10)}
+  .auth-input.error{border-color:#dc2626;box-shadow:0 0 0 3px rgba(220,38,38,0.08)}
+
+  .subj-card{
+    background:var(--bg-card);border-radius:16px;padding:16px;cursor:pointer;
+    border:1.5px solid var(--border-main);
+    box-shadow:0 1px 3px var(--shadow-card),0 4px 14px var(--shadow-card);
+    transition:transform 0.2s ease,box-shadow 0.2s ease,background 0.25s,border-color 0.25s;
+  }
+  .subj-card:hover{transform:translateY(-2px);box-shadow:0 4px 8px rgba(0,0,0,0.08),0 16px 36px rgba(0,0,0,0.1)}
+
+  .chapter-row{
+    background:var(--bg-card);border-radius:12px;padding:11px 14px;margin-bottom:8px;
+    border:1.5px solid var(--border-main);border-left-width:3px;
+    box-shadow:0 1px 3px var(--shadow-card);
+    display:flex;gap:10px;align-items:flex-start;
+    transition:box-shadow 0.15s,background 0.25s,border-color 0.25s;
+  }
+  .chapter-row:hover{box-shadow:0 2px 10px rgba(0,0,0,0.09)}
+
+  .modal-bg{
+    position:fixed;inset:0;background:rgba(15,14,13,0.6);
+    backdrop-filter:blur(6px);display:flex;align-items:center;justify-content:center;
+    padding:20px;z-index:50;animation:scaleIn 0.18s ease;
+  }
+
+  .tab-btn{
+    flex:1;padding:9px;font-size:0.8rem;font-weight:600;
+    border:none;cursor:pointer;font-family:'DM Sans',sans-serif;transition:all 0.2s ease;
+  }
+  .tab-btn.active{background:var(--cta-bg);color:var(--cta-text)}
+  .tab-btn.inactive{background:var(--bg-btn);color:var(--text-subtle)}
+
+  .spinner{
+    width:18px;height:18px;
+    border:2.5px solid rgba(255,255,255,0.3);border-top-color:#fff;
+    border-radius:50%;animation:spin 0.7s linear infinite;display:inline-block;
+  }
+
+  /* Dark mode toggle button */
+  .dm-toggle{
+    display:flex;align-items:center;gap:5px;
+    border-radius:20px;padding:4px 11px;
+    font-size:0.72rem;font-weight:600;cursor:pointer;
+    border:1.5px solid var(--border-btn);
+    background:var(--bg-btn);color:var(--text-secondary);
+    transition:all 0.2s ease;
+    white-space:nowrap;
+  }
+  .dm-toggle:hover{border-color:var(--text-muted)}
+</style>
+</head>
+<body>
+<div id="root"></div>
+<script type="text/babel">
+
+const EXAM_DATE = new Date("2026-11-01");
+const getDays = () => Math.max(0, Math.ceil((EXAM_DATE - new Date()) / 86400000));
+const uid = () => Math.random().toString(36).slice(2, 10);
+
+const SUBJECT_DEFS = [
+  // ── Paper 1: Financial Reporting ──
+  { id:"fr", name:"Financial Reporting", short:"FR", color:"#2563EB", light:"#eff6ff", text:"#1d4ed8",
+    chapters:[
+      // ── Section I (10–15%) ──
+      "[Sec I | 10–15%] Applicability Criteria & Statutory Provisions of Ind AS",
+      "[Sec I | 10–15%] Division II of Schedule III & Guidance Note",
+      // ── Section II (5–10%) ──
+      "[Sec II | 5–10%] Ind AS 1 – Presentation of Financial Statements",
+      "[Sec II | 5–10%] Ind AS 34 – Interim Financial Reporting",
+      "[Sec II | 5–10%] Ind AS 7 – Statement of Cash Flows",
+      "[Sec II | 5–10%] Ind AS 8 – Accounting Policies, Changes & Errors",
+      "[Sec II | 5–10%] Ind AS 10 – Events after Reporting Period",
+      "[Sec II | 5–10%] Ind AS 113 – Fair Value Measurement",
+      "[Sec II | 5–10%] Ind AS 115 – Revenue from Contracts with Customers",
+      // ── Section III (15–25%) ──
+      "[Sec III | 15–25%] Ind AS 2 – Inventories",
+      "[Sec III | 15–25%] Ind AS 16 – Property, Plant & Equipment",
+      "[Sec III | 15–25%] Ind AS 116 – Leases",
+      "[Sec III | 15–25%] Ind AS 23 – Borrowing Costs",
+      "[Sec III | 15–25%] Ind AS 36 – Impairment of Assets",
+      "[Sec III | 15–25%] Ind AS 38 – Intangible Assets",
+      "[Sec III | 15–25%] Ind AS 40 – Investment Property",
+      "[Sec III | 15–25%] Ind AS 105 – Non-current Assets Held for Sale",
+      "[Sec III | 15–25%] Ind AS 19 – Employee Benefits",
+      "[Sec III | 15–25%] Ind AS 37 – Provisions & Contingent Liabilities",
+      // ── Section IV (15–20%) ──
+      "[Sec IV | 15–20%] Ind AS 12 – Income Taxes",
+      "[Sec IV | 15–20%] Ind AS 21 – Effects of Foreign Exchange Rates",
+      "[Sec IV | 15–20%] Ind AS 24 – Related Party Disclosures",
+      "[Sec IV | 15–20%] Ind AS 33 – Earnings Per Share",
+      "[Sec IV | 15–20%] Ind AS 108 – Operating Segments",
+      "[Sec IV | 15–20%] Ind AS 20 – Government Grants",
+      "[Sec IV | 15–20%] Ind AS 102 – Share Based Payment",
+      "[Sec IV | 15–20%] Ind AS 41 – Agriculture",
+      // ── Section V (10–15%) ──
+      "[Sec V | 10–15%] Ind AS 32 – Financial Instruments: Presentation",
+      "[Sec V | 10–15%] Ind AS 109 – Financial Instruments: Recognition & Measurement",
+      "[Sec V | 10–15%] Ind AS 107 – Financial Instruments: Disclosures",
+      // ── Section VI (10–20%) ──
+      "[Sec VI | 10–20%] Ind AS 103 – Business Combinations",
+      "[Sec VI | 10–20%] Ind AS 110 – Consolidated Financial Statements",
+      "[Sec VI | 10–20%] Ind AS 111 – Joint Arrangements",
+      "[Sec VI | 10–20%] Ind AS 27 – Separate Financial Statements",
+      "[Sec VI | 10–20%] Ind AS 28 – Investments in Associates & JVs",
+      "[Sec VI | 10–20%] Ind AS 112 – Disclosure of Interests in Other Entities",
+      // ── Section VII (5–10%) ──
+      "[Sec VII | 5–10%] Ind AS 101 – First-time Adoption of Ind AS",
+      // ── Section VIII (5–10%) ──
+      "[Sec VIII | 5–10%] Analysis of Financial Statements (as per Ind AS)",
+      "[Sec VIII | 5–10%] Ethics with Accounting Concepts",
+      "[Sec VIII | 5–10%] Technology and Accounting",
+    ]},
+
+  // ── Paper 2: Advanced Financial Management ──
+  { id:"afm", name:"Advanced Financial Management", short:"AFM", color:"#7C3AED", light:"#f5f3ff", text:"#6d28d9",
+    chapters:[
+      // ── Section I (8–15%) ──
+      "[Sec I | 8–15%] Financial Policy, Corporate Strategy & Role of CFO",
+      "[Sec I | 8–15%] Risk Management & Value at Risk (VaR)",
+      "[Sec I | 8–15%] Advanced Capital Budgeting – Risk, APV & Replacement Cycle",
+      "[Sec I | 8–15%] Security Analysis – Fundamental, Technical Analysis & EMH",
+      // ── Section II (20–30%) ──
+      "[Sec II | 20–30%] Theory of Valuation & Return Concepts",
+      "[Sec II | 20–30%] Equity Risk Premium & Required Return on Equity",
+      "[Sec II | 20–30%] Approaches to Valuation of Equity Shares",
+      "[Sec II | 20–30%] Valuation of Preference Shares & Bonds/Debentures",
+      "[Sec II | 20–30%] Role & Responsibilities of Valuers",
+      // ── Section II–III (20–30%) ──
+      "[Sec II–III | 20–30%] Portfolio Analysis, Selection & Capital Market Theory",
+      "[Sec II–III | 20–30%] Portfolio Revision, Evaluation & Asset Allocation",
+      "[Sec II–III | 20–30%] Fixed Income Portfolio & Alternative Investments (RE, Gold, PE, REITs, ETFs)",
+      "[Sec II–III | 20–30%] Securitization – Concept, Mechanism, Instruments & Pricing",
+      "[Sec II–III | 20–30%] Mutual Funds – Types, Evaluation & Role of Fund Manager",
+      "[Sec II–III | 20–30%] Derivatives – Futures & Forwards: Pricing & Hedging",
+      "[Sec II–III | 20–30%] Derivatives – Options: Pricing, Greeks & Exotic Options",
+      "[Sec II–III | 20–30%] Swaps, Credit Derivatives, Real Options & Commodity/Weather Derivatives",
+      // ── Section IV (20–25%) ──
+      "[Sec IV | 20–25%] Foreign Exchange Exposure & Risk Management",
+      "[Sec IV | 20–25%] International Capital Budgeting & Raising Funds from International Sources",
+      "[Sec IV | 20–25%] International Working Capital, Sovereign Funds & GIFT City",
+      "[Sec IV | 20–25%] Interest Rate Risk Management – FRA, Futures, Options & Swaps",
+      // ── Section V (10–15%) ──
+      "[Sec V | 10–15%] Business Valuation – DCF, Relative Valuation, EVA & MVA",
+      "[Sec V | 10–15%] Valuation of Startups, Distressed Companies & Digital Platforms",
+      "[Sec V | 10–15%] Mergers, Acquisitions & Corporate Restructuring",
+      "[Sec V | 10–15%] Cross-border Mergers & SPACs",
+      // ── Section VI (2–5%) ──
+      "[Sec VI | 2–5%] Startup Finance – Sources of Funding, Unicorn Concept & Succession Planning",
+    ]},
+
+  // ── Paper 3: Advanced Auditing, Assurance & Professional Ethics ──
+  { id:"aaa", name:"Advanced Auditing & Professional Ethics", short:"AAA", color:"#059669", light:"#ecfdf5", text:"#047857",
+    chapters:[
+      // ── Section I (45–55%) ──
+      "[Sec I | 45–55%] Quality Control – SQC 1 & SA 220",
+      "[Sec I | 45–55%] General Auditing Principles – SA 240, SA 250, SA 260, SA 299, SA 402",
+      "[Sec I | 45–55%] Audit Planning, Strategy & Execution – SA 300, SA 450, SA 520, SA 540",
+      "[Sec I | 45–55%] Using Work of Internal Auditors & Expert – SA 610, SA 620",
+      "[Sec I | 45–55%] Materiality, Risk Assessment & Internal Control – SA 265, SA 315, SA 320, SA 330",
+      "[Sec I | 45–55%] Audit Evidence – SA 500, SA 501, SA 505, SA 510, SA 530, SA 550",
+      "[Sec I | 45–55%] Completion & Review – SA 560, SA 570, SA 580",
+      "[Sec I | 45–55%] Reporting – SA 700, SA 701, SA 705, SA 706, SA 710, SA 720",
+      "[Sec I | 45–55%] Specialised Areas – SA 800, SA 805, SA 810",
+      "[Sec I | 45–55%] Related Services – SRS 4400 & SRS 4410",
+      "[Sec I | 45–55%] Review of Financial Information – SRE 2400 & SRE 2410",
+      "[Sec I | 45–55%] Prospective Financial Information & Assurance – SAE 3400, SAE 3402, SAE 3420",
+      // ── Section II (3–6%) ──
+      "[Sec II | 3–6%] Digital Auditing & Assurance – CAAT, Data Analytics, AI & Remote Auditing",
+      // ── Section III (17–24%) ──
+      "[Sec III | 17–24%] Group Audits & SA 600 – Work of Another Auditor",
+      "[Sec III | 17–24%] Special Features of Audit of Banks & NBFCs",
+      "[Sec III | 17–24%] Overview of Audit of Public Sector Undertakings",
+      "[Sec III | 17–24%] Internal Audit – Scope, Standards, Audit Trail & Report",
+      "[Sec III | 17–24%] Due Diligence, Investigation & Forensic Accounting",
+      // ── Section IV (3–6%) ──
+      "[Sec IV | 3–6%] Emerging Areas – SDG, ESG & Sustainability Assurance",
+      // ── Section V (17–24%) ──
+      "[Sec V | 17–24%] Professional Ethics – IESBA Code of Ethics",
+      "[Sec V | 17–24%] CA Act 1949 & CA Regulations 1988 – Key Provisions",
+      "[Sec V | 17–24%] Threats, Safeguards & Conceptual Framework of Ethics",
+    ]},
+
+  // ── Paper 4: Direct Tax Laws & International Taxation ──
+  { id:"dt", name:"Direct Tax Laws & International Taxation", short:"DT", color:"#B45309", light:"#fffbeb", text:"#92400e",
+    chapters:[
+      // ── Section I (40–45%) ──
+      "[Sec I | 40–45%] Computation of Income-tax – General Provisions & Alternative Tax Regimes",
+      "[Sec I | 40–45%] Special Tax Regimes & Optimisation of Tax Liability",
+      "[Sec I | 40–45%] Charitable & Religious Trusts, Political Parties & Electoral Trusts",
+      "[Sec I | 40–45%] Business Trusts, Securitisation Trusts, Investment Funds & Other Funds",
+      "[Sec I | 40–45%] Anti-avoidance Provisions – GAAR & Related Measures",
+      "[Sec I | 40–45%] Provisions for Taxation in the Digital Economy",
+      // ── Section II (20–30%) ──
+      "[Sec II | 20–30%] TDS & TCS – Deduction, Collection & Recovery",
+      "[Sec II | 20–30%] Income-tax Authorities",
+      "[Sec II | 20–30%] Assessment Procedures",
+      "[Sec II | 20–30%] Appeals, Revision & Dispute Resolution",
+      "[Sec II | 20–30%] Penalties, Offences, Prosecution & Undisclosed Income",
+      "[Sec II | 20–30%] Miscellaneous Provisions & Tax Audit",
+      // ── Section III (30–35%) ──
+      "[Sec III | 30–35%] Transfer Pricing – Domestic & International",
+      "[Sec III | 30–35%] Non-resident Taxation under Income-tax Act",
+      "[Sec III | 30–35%] Double Taxation Relief & DTAA",
+      "[Sec III | 30–35%] Advance Ruling for Non-residents",
+      "[Sec III | 30–35%] OECD & UN Model Tax Conventions",
+      "[Sec III | 30–35%] Fundamentals of BEPS",
+      "[Sec III | 30–35%] Application & Interpretation of Tax Treaties",
+      "[Sec III | 30–35%] Latest Developments in International Taxation",
+    ]},
+
+  // ── Paper 5: Indirect Tax Laws ──
+  { id:"idt", name:"Indirect Tax Laws", short:"IDT", color:"#DC2626", light:"#fef2f2", text:"#b91c1c",
+    chapters:[
+      // ── GST Section I (45–65%) ──
+      "[GST Sec I | 45–65%] Concept of Supply – Inter-state, Intra-state & Territorial Waters",
+      "[GST Sec I | 45–65%] Charge of Tax, Reverse Charge & Composition Levy",
+      "[GST Sec I | 45–65%] Classification & Exemptions from GST",
+      "[GST Sec I | 45–65%] Place of Supply",
+      "[GST Sec I | 45–65%] Time of Supply",
+      "[GST Sec I | 45–65%] Value of Supply",
+      "[GST Sec I | 45–65%] Input Tax Credit – Eligibility, Conditions & Blocked Credits",
+      "[GST Sec I | 45–65%] Computation of GST Liability",
+      "[GST Sec I | 45–65%] GST Registration",
+      "[GST Sec I | 45–65%] Tax Invoice, Credit/Debit Notes & E-way Bill",
+      "[GST Sec I | 45–65%] Accounts, Records & Returns",
+      "[GST Sec I | 45–65%] Payment of Tax",
+      // ── GST Section II (10–30%) ──
+      "[GST Sec II | 10–30%] Refunds under GST",
+      "[GST Sec II | 10–30%] Job Work Provisions",
+      "[GST Sec II | 10–30%] Liability to Pay in Certain Cases",
+      "[GST Sec II | 10–30%] GST Administration, Assessment & Audit",
+      // ── GST Section III (0–5%) ──
+      "[GST Sec III | 0–5%] Inspection, Search, Seizure & Arrest",
+      // ── GST Section IV (15–30%) ──
+      "[GST Sec IV | 15–30%] Demand & Recovery",
+      "[GST Sec IV | 15–30%] Offences & Penalties",
+      "[GST Sec IV | 15–30%] Advance Ruling under GST",
+      "[GST Sec IV | 15–30%] Appeals & Revision under GST",
+      "[GST Sec IV | 15–30%] Ethics under GST",
+      // ── Customs Section I (40–65%) ──
+      "[Customs Sec I | 40–65%] Levy of Customs Duties & Taxable Event",
+      "[Customs Sec I | 40–65%] Types of Customs Duties",
+      "[Customs Sec I | 40–65%] Classification & Valuation of Import/Export Goods",
+      // ── Customs Section II (20–45%) ──
+      "[Customs Sec II | 20–45%] Import & Export Procedures & Special Procedures",
+      "[Customs Sec II | 20–45%] Warehousing",
+      "[Customs Sec II | 20–45%] Refund under Customs",
+      // ── Customs Section III (10–20%) ──
+      "[Customs Sec III | 10–20%] Foreign Trade Policy – Overview & Export Promotion Schemes",
+    ]},
+
+  // ── Paper 6: SPOM ──
+  { id:"spom", name:"SPOM Set-A & Set-B", short:"SPOM", color:"#0891B2", light:"#ecfeff", text:"#0e7490",
+    sets:[
+      {id:"set_a", name:"Law", timeWindow:"1–2 hrs",
+        chapters:[
+          // ── Company Law (50 Marks) ──
+          // Section I (35–45%)
+          "[Co. Law Sec I | 35–45%] Appointment & Qualifications of Directors",
+          "[Co. Law Sec I | 35–45%] Appointment & Remuneration of Managerial Personnel",
+          "[Co. Law Sec I | 35–45%] Meetings of Board and its Powers",
+          // Section II (25–30%)
+          "[Co. Law Sec II | 25–30%] Inspection, Inquiry and Investigation",
+          "[Co. Law Sec II | 25–30%] Compromises, Arrangements and Amalgamations",
+          "[Co. Law Sec II | 25–30%] Prevention of Oppression and Mismanagement",
+          // Section III (30–35%)
+          "[Co. Law Sec III | 30–35%] Winding Up",
+          "[Co. Law Sec III | 30–35%] Miscellaneous Provisions",
+          "[Co. Law Sec III | 30–35%] Adjudication, Special Courts & NCLT",
+          // ── Securities Laws (20 Marks) ──
+          "[Sec Laws | 20 Marks] Overview of SEBI Act, 1992",
+          "[Sec Laws | 20 Marks] SEBI (LODR) Regulations, 2015",
+          "[Sec Laws | 20 Marks] SEBI (ICDR) Regulations, 2018",
+          "[Sec Laws | 20 Marks] SEBI (Takeover) Regulations, 2011",
+          "[Sec Laws | 20 Marks] SEBI (PIT) Regulations, 2015",
+          // ── Economic Laws (30 Marks) ──
+          // Section I (35–40%)
+          "[Eco. Laws Sec I | 35–40%] FEMA 1999 – Introduction, Definitions, Regulation & Penalties",
+          // Section II (20–30%)
+          "[Eco. Laws Sec II | 20–30%] FCRA 2010 – Definitions & Regulation of Foreign Contribution",
+          // Section III (35–40%)
+          "[Eco. Laws Sec III | 35–40%] IBC 2016 – Significant Concepts (up to Section 33)",
+        ]},
+      {id:"set_b", name:"SCPM", timeWindow:"1–2 hrs",
+        chapters:[
+          // ── Part A: Strategic Cost Management (50%) ──
+          "[Part A – Ch 1] Intro to Strategic Cost Management – Traditional vs Strategic",
+          "[Part A – Ch 1] Organisational Context – Value Proposition, Business Model Canvas",
+          "[Part A – Ch 2] Modern Business Environment – Cost of Quality & TQM",
+          "[Part A – Ch 2] Supply Chain Management, Gain Sharing, Outsourcing & Offshoring",
+          "[Part A – Ch 3] Lean System – JIT, Kaizen Costing, 5S & TPM",
+          "[Part A – Ch 3] Cellular Manufacturing, Six Sigma & Process Innovation",
+          "[Part A – Ch 4] Cost Control/Reduction, Target Costing & Throughput Accounting",
+          "[Part A – Ch 4] Life Cycle Costing & Environmental Management Accounting",
+          "[Part A – Ch 5] Emerging Business Models – Digital, Hyper-disruptive & Sustainability",
+          "[Part A – Ch 6] Strategic Revenue Management – CVP Analysis & Relevant Cost Concepts",
+          "[Part A – Ch 6] Pricing Decisions – Theory, New Products, Services & Emerging Models",
+          "[Part A – Ch 6] Pricing Strategies – Kano's Attributes, Sensitivity & Special Circumstances",
+          "[Part A – Ch 7] Strategic Profit Management – Operating Profit Analysis",
+          "[Part A – Ch 7] Activity Based Profitability, ABM, ABB & Pareto Analysis",
+          // ── Part B: Strategic Performance Management (50%) ──
+          "[Part B – Ch 1] Intro to Strategic Performance Management – Strategy & Value Chain",
+          "[Part B – Ch 1] Performance Issues in Complex Structures, Behavioural Aspects & Corporate Failure",
+          "[Part B – Ch 2] Strategic Performance Measures – CSFs, KPIs & Financial Measures",
+          "[Part B – Ch 2] Balanced Scorecard, Performance Pyramid, Building Block Model & TBL",
+          "[Part B – Ch 3] Strategic Performance Measures – Not-for-Profit, VFM & Adapted BSC",
+          "[Part B – Ch 4] Preparation of Performance Reports",
+          "[Part B – Ch 5] Divisional Transfer Pricing – Meaning, Purpose & Methods",
+          "[Part B – Ch 5] Behavioural Consequences of Divisional Structures & Int'l TP",
+          "[Part B – Ch 6] Standard Costing – Advanced Variances & Reconciliation of Profit",
+          "[Part B – Ch 6] Variance Investigation, Behavioural Aspects & Limitations",
+        ]},
+    ]},
+];
+
+// ──────────────────────────────────────────────────────────
+// STORAGE LAYER
+// ──────────────────────────────────────────────────────────
+async function sharedGet(key) {
+  try {
+    if (window.storage && typeof window.storage.get === 'function') {
+      const r = await window.storage.get(key, true);
+      if (r && r.value) return JSON.parse(r.value);
+    }
+  } catch(e) {}
+  try { const r = localStorage.getItem('sd_' + key); if (r) return JSON.parse(r); } catch(e) {}
+  return null;
+}
+async function sharedSet(key, value) {
+  const json = JSON.stringify(value);
+  try { if (window.storage && typeof window.storage.set === 'function') await window.storage.set(key, json, true); } catch(e) {}
+  try { localStorage.setItem('sd_' + key, json); } catch(e) {}
+}
+function sessionGet() {
+  try { const r = localStorage.getItem('cafinal_sess'); return r ? JSON.parse(r) : null; } catch(e) { return null; }
+}
+function sessionSet(data) { try { localStorage.setItem('cafinal_sess', JSON.stringify(data)); } catch(e) {} }
+function sessionClear() { try { localStorage.removeItem('cafinal_sess'); } catch(e) {} }
+
+async function hashPassword(password) {
+  const enc = new TextEncoder();
+  const data = enc.encode(password + "cafinal_nov26_salt_avishi");
+  const buf = await crypto.subtle.digest('SHA-256', data);
+  return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
+}
+
+function buildInit() {
+  const chapterOrder={}, chapterNames={};
+  for (const s of SUBJECT_DEFS) {
+    if (s.sets) {
+      for (const set of s.sets) {
+        const k=`${s.id}_${set.id}`;
+        chapterOrder[k]=set.chapters.map(ch=>{const id=uid();chapterNames[id]=ch;return id;});
+      }
+    } else {
+      chapterOrder[s.id]=s.chapters.map(ch=>{const id=uid();chapterNames[id]=ch;return id;});
+    }
+  }
+  return {topicData:{},chapterOrder,chapterNames};
+}
+
+// ──────────────────────────────────────────────────────────
+// THEME CONTEXT & HELPERS
+// ──────────────────────────────────────────────────────────
+const ThemeContext = React.createContext({ darkMode: false, toggleDark: ()=>{} });
+
+// Theme token object — used for inline styles
+const getT = (dm) => dm ? {
+  page:"#0f0e0d", card:"#1c1917", card2:"#221f1c", input:"#262220",
+  btn:"#292524", header:"#181614", border:"#2d2a27", borderBtn:"#3d3a37",
+  borderDashed:"#3d3a37", primary:"#fafaf9", secondary:"#c4bdb7",
+  muted:"#78716c", subtle:"#57534e", cta:"#fafaf9", ctaText:"#1c1917",
+  ctaLoading:"#3d3a37", progTrack:"#2d2a27",
+} : {
+  page:"#f7f4ef", card:"#ffffff", card2:"#faf8f5", input:"#faf8f5",
+  btn:"#f5f5f4", header:"#ffffff", border:"#ede9e3", borderBtn:"#e7e5e4",
+  borderDashed:"#d4cdc5", primary:"#1c1917", secondary:"#57534e",
+  muted:"#a09890", subtle:"#78716c", cta:"#1c1917", ctaText:"#fff",
+  ctaLoading:"#d6d3d1", progTrack:"#ede9e3",
+};
+
+const STATUS_SEQ=["pending","inprogress","done"];
+const PRI_SEQ=["high","medium","low"];
+const SS={
+  pending:   {c:"#9ca3af",bg:"#f9fafb",border:"#e5e7eb",l:"○ Pending"},
+  inprogress:{c:"#b45309",bg:"#fffbeb",border:"#fde68a",l:"⟳ In Progress"},
+  done:      {c:"#047857",bg:"#ecfdf5",border:"#a7f3d0",l:"✓ Done"},
+};
+const PS={
+  high:  {c:"#b91c1c",bg:"#fef2f2",border:"#fecaca",l:"🔴 High"},
+  medium:{c:"#92400e",bg:"#fffbeb",border:"#fde68a",l:"🟡 Med"},
+  low:   {c:"#1d4ed8",bg:"#eff6ff",border:"#bfdbfe",l:"🔵 Low"},
+};
+const RTOGGLE=[
+  {on:"#4f46e5",onBg:"#eef2ff",onBorder:"#c7d2fe"},
+  {on:"#be185d",onBg:"#fdf2f8",onBorder:"#fbcfe8"},
+  {on:"#c2410c",onBg:"#fff7ed",onBorder:"#fed7aa"},
+];
+
+const {useState,useEffect,useCallback,useRef,useContext}=React;
+
+// ── Progress Bar ──
+const ProgBar=({pct,color,h=5})=>{
+  const {darkMode:dm}=useContext(ThemeContext);
+  return (
+    <div style={{background:dm?"#2d2a27":"#ede9e3",borderRadius:99,height:h,overflow:"hidden"}}>
+      <div style={{height:"100%",width:`${pct}%`,background:color,
+        transition:"width 0.5s cubic-bezier(.4,0,.2,1)",borderRadius:99}}/>
+    </div>
+  );
+};
+
+// ── Ring Chart ──
+const Ring=({pct,color,track="#e7e5e4",size=56})=>{
+  const r=(size-7)/2,c=2*Math.PI*r,d=(pct/100)*c;
+  return(
+    <svg width={size} height={size}>
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={track} strokeWidth={4}/>
+      <circle cx={size/2} cy={size/2} r={r} fill="none" stroke={color} strokeWidth={4}
+        strokeDasharray={`${d} ${c-d}`} strokeLinecap="round"
+        transform={`rotate(-90 ${size/2} ${size/2})`}
+        style={{transition:"stroke-dasharray 0.5s cubic-bezier(.4,0,.2,1)"}}/>
+      <text x={size/2} y={size/2+0.5} textAnchor="middle" dominantBaseline="middle"
+        fill={color} fontSize={size<48?8:10} fontWeight={700}
+        fontFamily="DM Sans,sans-serif">{pct}%</text>
+    </svg>
+  );
+};
+
+// ── Dark Mode Toggle Button ──
+const DarkToggle = () => {
+  const {darkMode:dm, toggleDark} = useContext(ThemeContext);
+  return (
+    <button className="dm-toggle" onClick={toggleDark}
+      title={dm ? "Switch to Light Mode" : "Switch to Dark Mode"}>
+      <span style={{fontSize:"0.85rem"}}>{dm ? "☀️" : "🌙"}</span>
+      <span>{dm ? "Light" : "Dark"}</span>
+    </button>
+  );
+};
+
+// ──────────────────────────────────────────────────────────
+// AUTH SCREEN
+// ──────────────────────────────────────────────────────────
+function AuthScreen({ onLogin }) {
+  const {darkMode:dm} = useContext(ThemeContext);
+  const T = getT(dm);
+
+  const [tab, setTab] = useState("login");
+  const [username, setUsername] = useState("");
+  const [password, setPassword] = useState("");
+  const [confirmPwd, setConfirmPwd] = useState("");
+  const [displayName, setDisplayName] = useState("");
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [showPwd, setShowPwd] = useState(false);
+  const [success, setSuccess] = useState("");
+
+  const clean = s => s.toLowerCase().replace(/[^a-z0-9_]/g,"").slice(0,20);
+  const validUn = u => /^[a-z0-9_]{3,20}$/.test(u);
+  const resetForm = () => { setError(""); setSuccess(""); setPassword(""); setConfirmPwd(""); };
+
+  const handleLogin = async () => {
+    const u = username.trim();
+    if (!u || !password) { setError("Please fill in all fields."); return; }
+    setLoading(true); setError("");
+    try {
+      const user = await sharedGet(`user:${u}`);
+      if (!user) { setError("No account found with that username. Please register first."); setLoading(false); return; }
+      const hash = await hashPassword(password);
+      if (hash !== user.passwordHash) { setError("Incorrect password. Please try again."); setLoading(false); return; }
+      onLogin({ username: u, name: user.name });
+    } catch(e) { setError("Something went wrong. Please try again."); }
+    setLoading(false);
+  };
+
+  const handleRegister = async () => {
+    const u = username.trim(), nm = displayName.trim();
+    if (!validUn(u)) { setError("Username: 3–20 chars, only letters / numbers / underscore."); return; }
+    if (!nm) { setError("Please enter your display name."); return; }
+    if (password.length < 6) { setError("Password must be at least 6 characters."); return; }
+    if (password !== confirmPwd) { setError("Passwords do not match."); return; }
+    setLoading(true); setError("");
+    try {
+      const existing = await sharedGet(`user:${u}`);
+      if (existing) { setError("That username is already taken. Please choose another."); setLoading(false); return; }
+      const hash = await hashPassword(password);
+      await sharedSet(`user:${u}`, { name: nm, passwordHash: hash, createdAt: Date.now() });
+      setSuccess("Account created! Logging you in…");
+      setTimeout(() => onLogin({ username: u, name: nm }), 800);
+    } catch(e) { setError("Something went wrong. Please try again."); }
+    setLoading(false);
+  };
+
+  const handleKey = e => { if(e.key==="Enter" && !loading) { tab==="login"?handleLogin():handleRegister(); } };
+
+  return (
+    <div style={{minHeight:"100vh",background:T.page,display:"flex",
+      flexDirection:"column",alignItems:"center",justifyContent:"center",padding:"20px",
+      transition:"background 0.25s ease"}}>
+
+      {/* Dark mode toggle — top right */}
+      <div style={{position:"fixed",top:16,right:16,zIndex:100}}>
+        <DarkToggle/>
+      </div>
+
+      <div style={{background:T.card,borderRadius:24,padding:"28px 24px 32px",
+        maxWidth:400,width:"100%",border:`1.5px solid ${T.border}`,
+        boxShadow:`0 24px 72px ${dm?"rgba(0,0,0,0.5)":"rgba(0,0,0,0.10)"}`,
+        animation:"fadeUp 0.35s ease both",transition:"background 0.25s,border-color 0.25s"}}>
+
+        <div style={{textAlign:"center",marginBottom:24}}>
+          <div style={{fontSize:"2.4rem",marginBottom:10,lineHeight:1}}>📚</div>
+          <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.35rem",fontWeight:700,
+            color:T.primary,letterSpacing:"-0.3px",lineHeight:1.2,marginBottom:4}}>
+            CA Final Study Tracker
+          </div>
+          <div style={{fontSize:"0.71rem",color:T.muted,marginBottom:3}}>for Nov'26 Students</div>
+          <div style={{fontSize:"0.69rem",color:"#b45309",fontWeight:600}}>Prepared by CA Avishi Gupta</div>
+        </div>
+
+        <div style={{display:"flex",borderRadius:12,overflow:"hidden",
+          border:`1.5px solid ${T.borderBtn}`,marginBottom:22}}>
+          {[["login","Login"],["register","Create Account"]].map(([t,l])=>(
+            <button key={t} className={`tab-btn ${tab===t?"active":"inactive"}`}
+              onClick={()=>{setTab(t);resetForm();}}>
+              {l}
+            </button>
+          ))}
+        </div>
+
+        <div style={{background:T.card2,border:`1px solid ${T.border}`,borderRadius:10,
+          padding:"8px 12px",marginBottom:18,display:"flex",gap:8,alignItems:"flex-start",
+          transition:"background 0.25s,border-color 0.25s"}}>
+          <span style={{fontSize:"0.85rem",flexShrink:0}}>🔒</span>
+          <div style={{fontSize:"0.66rem",color:T.subtle,lineHeight:1.5}}>
+            Your progress syncs across all devices when you log in with the same credentials.
+          </div>
+        </div>
+
+        <div style={{display:"flex",flexDirection:"column",gap:11}}>
+          <div>
+            <label style={{fontSize:"0.72rem",fontWeight:600,color:T.secondary,display:"block",marginBottom:5}}>Username</label>
+            <input className="auth-input" value={username}
+              onChange={e=>setUsername(clean(e.target.value))}
+              onKeyDown={handleKey} placeholder="e.g. priya_sharma"
+              autoCapitalize="none" autoCorrect="off" autoComplete="username"/>
+            {tab==="register"&&<div style={{fontSize:"0.63rem",color:T.muted,marginTop:4,paddingLeft:2}}>
+              3–20 chars · letters, numbers, underscore only
+            </div>}
+          </div>
+          {tab==="register"&&(
+            <div>
+              <label style={{fontSize:"0.72rem",fontWeight:600,color:T.secondary,display:"block",marginBottom:5}}>Your Name</label>
+              <input className="auth-input" value={displayName}
+                onChange={e=>setDisplayName(e.target.value)}
+                onKeyDown={handleKey} placeholder="e.g. Priya Sharma" autoComplete="name"/>
+            </div>
+          )}
+          <div>
+            <label style={{fontSize:"0.72rem",fontWeight:600,color:T.secondary,display:"block",marginBottom:5}}>Password</label>
+            <div style={{position:"relative"}}>
+              <input className="auth-input" type={showPwd?"text":"password"}
+                value={password} onChange={e=>setPassword(e.target.value)}
+                onKeyDown={handleKey}
+                placeholder={tab==="register"?"Min. 6 characters":"Enter your password"}
+                autoComplete={tab==="register"?"new-password":"current-password"}
+                style={{paddingRight:44}}/>
+              <button onClick={()=>setShowPwd(s=>!s)}
+                style={{position:"absolute",right:12,top:"50%",transform:"translateY(-50%)",
+                  background:"none",border:"none",cursor:"pointer",fontSize:"0.8rem",color:T.muted,padding:4}}>
+                {showPwd?"🙈":"👁️"}
+              </button>
+            </div>
+          </div>
+          {tab==="register"&&(
+            <div>
+              <label style={{fontSize:"0.72rem",fontWeight:600,color:T.secondary,display:"block",marginBottom:5}}>Confirm Password</label>
+              <input className="auth-input" type={showPwd?"text":"password"}
+                value={confirmPwd} onChange={e=>setConfirmPwd(e.target.value)}
+                onKeyDown={handleKey} placeholder="Re-enter password" autoComplete="new-password"/>
+            </div>
+          )}
+        </div>
+
+        {error&&(
+          <div style={{marginTop:14,background:"#fef2f2",border:"1px solid #fecaca",
+            borderRadius:9,padding:"9px 12px",fontSize:"0.73rem",color:"#b91c1c",
+            lineHeight:1.5,display:"flex",gap:7,alignItems:"flex-start"}}>
+            <span style={{flexShrink:0}}>⚠️</span>{error}
+          </div>
+        )}
+        {success&&(
+          <div style={{marginTop:14,background:"#ecfdf5",border:"1px solid #a7f3d0",
+            borderRadius:9,padding:"9px 12px",fontSize:"0.73rem",color:"#047857",
+            lineHeight:1.5,display:"flex",gap:7,alignItems:"center"}}>
+            <span>✅</span>{success}
+          </div>
+        )}
+
+        <button onClick={tab==="login"?handleLogin:handleRegister} disabled={loading}
+          style={{width:"100%",marginTop:18,
+            background:loading?T.ctaLoading:T.cta,
+            color:T.ctaText,border:"none",borderRadius:12,padding:"13px",
+            fontSize:"0.88rem",cursor:loading?"default":"pointer",
+            fontWeight:700,transition:"all 0.18s ease",
+            display:"flex",alignItems:"center",justifyContent:"center",gap:10,
+            boxShadow:loading?"none":`0 4px 16px ${dm?"rgba(250,250,249,0.12)":"rgba(28,25,23,0.18)"}`}}>
+          {loading
+            ? <><div className="spinner"/><span>Please wait…</span></>
+            : tab==="login" ? "Login →" : "Create Account →"
+          }
+        </button>
+
+        <div style={{textAlign:"center",marginTop:16,fontSize:"0.73rem",color:T.muted}}>
+          {tab==="login"
+            ? <>Don't have an account?{" "}
+                <button onClick={()=>{setTab("register");resetForm();}}
+                  style={{background:"none",border:"none",color:"#b45309",
+                    fontWeight:600,cursor:"pointer",fontSize:"0.73rem",textDecoration:"underline"}}>Register here</button></>
+            : <>Already have an account?{" "}
+                <button onClick={()=>{setTab("login");resetForm();}}
+                  style={{background:"none",border:"none",color:"#b45309",
+                    fontWeight:600,cursor:"pointer",fontSize:"0.73rem",textDecoration:"underline"}}>Login here</button></>
+          }
+        </div>
+      </div>
+
+      <div style={{marginTop:20,fontSize:"0.65rem",color:T.muted,textAlign:"center",lineHeight:1.6}}>
+        CA Final Nov '26 · Prepared by CA Avishi Gupta<br/>
+        Your data is saved securely and syncs across devices.
+      </div>
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// TRACKER APP
+// ──────────────────────────────────────────────────────────
+function TrackerApp({ user, onLogout }) {
+  const {darkMode:dm} = useContext(ThemeContext);
+  const T = getT(dm);
+
+  const [view, setView] = useState("dashboard");
+  const [st, setSt] = useState(null);
+  const [nameInput, setNameInput] = useState("");
+  const [editingName, setEditingName] = useState(false);
+  const [filterStatus, setFilter] = useState("all");
+  const [filterPri, setFilterPri] = useState("all");
+  const [filterClass, setFilterClass] = useState("all");
+  const [addInputs, setAddInputs] = useState({});
+  const [noteModal, setNoteModal] = useState(null);
+  const [noteText, setNoteText] = useState("");
+  const [reorderMode, setReorderMode] = useState(false);
+  const [logoutConfirm, setLogoutConfirm] = useState(false);
+  const [saving, setSaving] = useState(false);
+
+  const TRACKER_KEY = `tracker:${user.username}`;
+
+  useEffect(() => {
+    sharedGet(TRACKER_KEY).then(d => setSt(d || buildInit()));
+  }, []);
+
+  const inited = useRef(false);
+  useEffect(() => {
+    if (!st) return;
+    if (!inited.current) { inited.current = true; return; }
+    setSaving(true);
+    sharedSet(TRACKER_KEY, st).then(() => {
+      setTimeout(() => setSaving(false), 600);
+    });
+  }, [st]);
+
+  const mut = useCallback(fn => setSt(prev => fn(prev)), []);
+
+  if (!st) return (
+    <div style={{display:"flex",alignItems:"center",justifyContent:"center",
+      height:"100vh",background:T.page,flexDirection:"column",gap:12,transition:"background 0.25s"}}>
+      <div className="spinner" style={{borderTopColor:"#b45309",border:"3px solid #ede9e3",
+        borderTopColor:"#b45309",width:32,height:32}}/>
+      <div style={{color:T.muted,fontSize:"0.82rem"}}>Loading your tracker…</div>
+    </div>
+  );
+
+  const getTopic = id => st.topicData[id] || {status:"pending",priority:"medium",note:""};
+  const setTopic = (id, patch) => mut(p => ({...p, topicData:{...p.topicData,[id]:{...getTopic(id),...patch}}}));
+  const getOrder = sKey => st.chapterOrder[sKey] || [];
+
+  const addChapter = sKey => {
+    const name = (addInputs[sKey]||"").trim(); if (!name) return;
+    const id = uid();
+    mut(p => ({...p,
+      chapterOrder:{...p.chapterOrder,[sKey]:[...getOrder(sKey),id]},
+      chapterNames:{...p.chapterNames,[id]:name}}));
+    setAddInputs(a => ({...a,[sKey]:""}));
+  };
+
+  const moveChapter = (sKey, idx, dir) => {
+    const order=[...getOrder(sKey)], ni=idx+dir;
+    if (ni<0||ni>=order.length) return;
+    [order[idx],order[ni]]=[order[ni],order[idx]];
+    mut(p => ({...p, chapterOrder:{...p.chapterOrder,[sKey]:order}}));
+  };
+
+  const delChapter = (sKey, id) =>
+    mut(p => ({...p, chapterOrder:{...p.chapterOrder,[sKey]:p.chapterOrder[sKey].filter(x=>x!==id)}}));
+
+  const getProgress = ids => {
+    const done = ids.filter(id=>getTopic(id).status==="done").length;
+    const inp  = ids.filter(id=>getTopic(id).status==="inprogress").length;
+    return {done,inp,total:ids.length,pct:ids.length?Math.round(done/ids.length*100):0};
+  };
+
+  const allIds = SUBJECT_DEFS.flatMap(s =>
+    s.sets ? s.sets.flatMap(set=>getOrder(`${s.id}_${set.id}`)) : getOrder(s.id));
+  const overall = getProgress(allIds);
+  const subject = SUBJECT_DEFS.find(s=>s.id===view);
+
+  // ── Modals ──
+  const EditNameModal = () => (
+    <div className="modal-bg">
+      <div style={{background:T.card,borderRadius:18,padding:22,width:"100%",maxWidth:360,
+        border:`1.5px solid ${T.border}`,boxShadow:`0 24px 60px ${dm?"rgba(0,0,0,0.5)":"rgba(0,0,0,0.12)"}`,
+        textAlign:"center",transition:"background 0.25s"}}>
+        <div style={{fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:"1rem",
+          color:T.primary,marginBottom:14}}>Update your display name</div>
+        <input value={nameInput} onChange={e=>setNameInput(e.target.value)}
+          onKeyDown={e=>{
+            if(e.key==="Enter"&&nameInput.trim()){
+              sharedSet(`user:${user.username}`,{...{name:nameInput.trim()}});
+              user.name=nameInput.trim();
+              sessionSet({...user,name:nameInput.trim()});
+              setEditingName(false); setNameInput(""); setSt(s=>({...s}));
+            }
+          }}
+          placeholder="Your name" autoFocus className="auth-input"
+          style={{textAlign:"center",marginBottom:12}}/>
+        <div style={{display:"flex",gap:8}}>
+          <button onClick={()=>{
+            if(!nameInput.trim()) return;
+            sharedSet(`user:${user.username}`,{name:nameInput.trim(),passwordHash:undefined});
+            sessionSet({...user,name:nameInput.trim()});
+            window.location.reload();
+          }}
+            style={{flex:1,background:T.cta,color:T.ctaText,border:"none",borderRadius:10,
+              padding:10,cursor:"pointer",fontWeight:700,fontSize:"0.83rem",
+              fontFamily:"'DM Sans',sans-serif"}}>Save</button>
+          <button onClick={()=>{setEditingName(false);setNameInput("");}}
+            style={{flex:1,background:T.btn,color:T.secondary,border:`1.5px solid ${T.borderBtn}`,
+              borderRadius:10,padding:10,cursor:"pointer",fontSize:"0.83rem",
+              fontFamily:"'DM Sans',sans-serif"}}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  const LogoutModal = () => (
+    <div className="modal-bg">
+      <div style={{background:T.card,borderRadius:18,padding:24,width:"100%",maxWidth:340,
+        border:`1.5px solid ${T.border}`,boxShadow:`0 24px 60px ${dm?"rgba(0,0,0,0.5)":"rgba(0,0,0,0.12)"}`,
+        textAlign:"center",transition:"background 0.25s"}}>
+        <div style={{fontSize:"1.8rem",marginBottom:10}}>👋</div>
+        <div style={{fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:"1rem",
+          color:T.primary,marginBottom:6}}>Log out?</div>
+        <div style={{fontSize:"0.74rem",color:T.muted,marginBottom:20,lineHeight:1.5}}>
+          Your progress is saved and will be here<br/>when you log back in, from any device.
+        </div>
+        <div style={{display:"flex",gap:8}}>
+          <button onClick={()=>{sessionClear();onLogout();}}
+            style={{flex:1,background:T.cta,color:T.ctaText,border:"none",borderRadius:10,
+              padding:11,cursor:"pointer",fontWeight:700,fontSize:"0.85rem",
+              fontFamily:"'DM Sans',sans-serif"}}>Log Out</button>
+          <button onClick={()=>setLogoutConfirm(false)}
+            style={{flex:1,background:T.btn,color:T.secondary,border:`1.5px solid ${T.borderBtn}`,
+              borderRadius:10,padding:11,cursor:"pointer",fontSize:"0.85rem",
+              fontFamily:"'DM Sans',sans-serif"}}>Cancel</button>
+        </div>
+      </div>
+    </div>
+  );
+
+  // ── DASHBOARD ──
+  if (view==="dashboard") return (
+    <div style={{minHeight:"100vh",background:T.page,transition:"background 0.25s"}}>
+      {/* Header */}
+      <div style={{background:T.header,borderBottom:`1.5px solid ${T.border}`,padding:"16px 20px 12px",
+        boxShadow:`0 2px 8px ${dm?"rgba(0,0,0,0.3)":"rgba(0,0,0,0.04)"}`,transition:"background 0.25s,border-color 0.25s"}}>
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+          <div>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.2rem",fontWeight:700,
+              color:T.primary,letterSpacing:"-0.3px",lineHeight:1.25}}>
+              CA Final Study Tracker<br/>
+              <span style={{fontSize:"0.92rem",fontWeight:600,color:T.secondary}}>for Nov'26 Students</span>
+            </div>
+            <div style={{color:T.muted,fontSize:"0.67rem",marginTop:3,fontWeight:400}}>
+              Prepared by <span style={{color:"#b45309",fontWeight:600}}>CA Avishi Gupta</span>
+            </div>
+          </div>
+          <div style={{display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end"}}>
+            {/* Dark toggle */}
+            <DarkToggle/>
+            <button onClick={()=>{setNameInput(user.name);setEditingName(true);}}
+              style={{background:T.btn,border:`1.5px solid ${T.borderBtn}`,borderRadius:8,
+                padding:"4px 10px",fontSize:"0.64rem",color:T.subtle,cursor:"pointer",
+                fontWeight:500,whiteSpace:"nowrap"}}>✏️ {user.name}</button>
+            <button onClick={()=>setLogoutConfirm(true)}
+              style={{background:"none",border:"none",color:T.muted,cursor:"pointer",
+                fontSize:"0.62rem",fontWeight:500,padding:"2px 0"}}>
+              Sign out ↗
+            </button>
+            <a href="https://boslive.icai.org/index.php" target="_blank" rel="noopener noreferrer"
+              style={{background:dm?"rgba(8,145,178,0.18)":"#ecfeff",
+                color:"#0e7490",border:"1.5px solid #0891B255",borderRadius:8,
+                padding:"4px 10px",fontSize:"0.62rem",fontWeight:600,textDecoration:"none",
+                display:"block",textAlign:"center",marginTop:1}}>
+              📖 BOS Portal ↗
+            </a>
+          </div>
+        </div>
+        <div style={{marginTop:8,display:"flex",alignItems:"center",gap:5,
+          fontSize:"0.61rem",color:saving?"#b45309":"#10b981"}}>
+          <div style={{width:5,height:5,borderRadius:"50%",
+            background:saving?"#b45309":"#10b981",
+            animation:saving?"pulse 1s ease infinite":"none"}}/>
+          {saving ? "Saving…" : "Synced across devices"}
+        </div>
+      </div>
+
+      <div style={{padding:"16px 16px 40px"}}>
+        {/* Hero card — always dark, unchanged */}
+        <div style={{background:"linear-gradient(135deg,#1c1917 0%,#2d2522 55%,#1c1917 100%)",
+          borderRadius:18,padding:"20px 22px",marginBottom:14,
+          position:"relative",overflow:"hidden"}}>
+          <div style={{position:"absolute",top:-50,right:-50,width:180,height:180,
+            background:"radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 70%)",borderRadius:"50%"}}/>
+          <div style={{marginBottom:14,paddingBottom:14,borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",fontWeight:700,
+              color:"#fafaf9",lineHeight:1.3}}>
+              Hi {user.name},
+            </div>
+            <div style={{color:"#a8a29e",fontSize:"0.74rem",marginTop:3,lineHeight:1.5}}>
+              Welcome back to your Study Tracker. Days left for your exams:{" "}
+              <span style={{color:"#d4a853",fontWeight:700,fontSize:"0.85rem"}}>{getDays()}</span>.
+              {getDays()>60?" You've got plenty of time — stay consistent! 💪"
+               :getDays()>30?" The final stretch is here — push hard! 🔥"
+               :" It's crunch time — give it everything! 🚀"}
+            </div>
+          </div>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+            <div>
+              <div style={{color:"#78716c",fontSize:"0.56rem",fontWeight:600,letterSpacing:"0.14em",
+                textTransform:"uppercase",marginBottom:5}}>Days Remaining</div>
+              <div style={{fontFamily:"'Playfair Display',serif",fontSize:"3rem",fontWeight:800,
+                lineHeight:1,color:"#fafaf9",letterSpacing:"-2px"}}>{getDays()}</div>
+              <div style={{color:"#57534e",fontSize:"0.65rem",marginTop:5}}>1 November 2026</div>
+            </div>
+            <div style={{textAlign:"center"}}>
+              <Ring pct={overall.pct} color="#d4a853" track="rgba(255,255,255,0.1)" size={72}/>
+              <div style={{color:"#57534e",fontSize:"0.63rem",marginTop:5}}>{overall.done}/{overall.total} done</div>
+            </div>
+          </div>
+        </div>
+
+        {/* Overall Progress card */}
+        <div style={{background:T.card,borderRadius:14,padding:"13px 16px",marginBottom:14,
+          border:`1.5px solid ${T.border}`,boxShadow:`0 1px 4px ${dm?"rgba(0,0,0,0.2)":"rgba(0,0,0,0.04)"}`,
+          transition:"background 0.25s,border-color 0.25s"}}>
+          <div style={{display:"flex",justifyContent:"space-between",marginBottom:8}}>
+            <span style={{fontSize:"0.7rem",color:T.secondary,fontWeight:500}}>Overall Progress</span>
+            <span style={{fontSize:"0.65rem",color:T.muted}}>{overall.pct}% complete</span>
+          </div>
+          <ProgBar pct={overall.pct} color="linear-gradient(90deg,#d4a853,#b45309)" h={6}/>
+          <div style={{display:"flex",gap:8,marginTop:10}}>
+            {[
+              {c:"#047857",darkC:"#34d399",bg:"#ecfdf5",darkBg:"rgba(4,120,87,0.18)",l:"✓ Done",v:overall.done},
+              {c:"#b45309",darkC:"#fbbf24",bg:"#fffbeb",darkBg:"rgba(180,83,9,0.18)",l:"⟳ Active",v:overall.inp},
+              {c:"#9ca3af",darkC:"#9ca3af",bg:"#f9fafb",darkBg:"rgba(255,255,255,0.05)",l:"○ Left",v:overall.total-overall.done-overall.inp},
+            ].map(({c,darkC,bg,darkBg,l,v})=>(
+              <div key={l} style={{flex:1,background:dm?darkBg:bg,borderRadius:8,padding:"7px 10px",
+                textAlign:"center",border:`1px solid ${dm?darkC+"22":c+"20"}`,transition:"all 0.25s"}}>
+                <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.05rem",fontWeight:700,color:dm?darkC:c}}>{v}</div>
+                <div style={{fontSize:"0.58rem",color:dm?darkC:c,opacity:0.75,marginTop:1}}>{l}</div>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* User card */}
+        <div style={{background:T.card,borderRadius:12,padding:"10px 14px",marginBottom:14,
+          border:`1.5px solid ${T.border}`,display:"flex",alignItems:"center",gap:10,
+          boxShadow:`0 1px 3px ${dm?"rgba(0,0,0,0.2)":"rgba(0,0,0,0.03)"}`,transition:"background 0.25s,border-color 0.25s"}}>
+          <div style={{width:34,height:34,borderRadius:"50%",background:dm?"#fafaf9":"#1c1917",
+            display:"flex",alignItems:"center",justifyContent:"center",
+            fontFamily:"'Playfair Display',serif",fontSize:"0.95rem",
+            fontWeight:700,color:dm?"#1c1917":"#fafaf9",flexShrink:0}}>
+            {user.name.charAt(0).toUpperCase()}
+          </div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:"0.78rem",fontWeight:600,color:T.primary,
+              overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user.name}</div>
+            <div style={{fontSize:"0.63rem",color:T.muted}}>@{user.username} · Nov '26 Candidate</div>
+          </div>
+          <div style={{fontSize:"0.63rem",color:"#10b981",fontWeight:500,
+            background:"#ecfdf5",borderRadius:20,padding:"3px 9px",
+            border:"1px solid #a7f3d0",flexShrink:0}}>● Synced</div>
+        </div>
+
+        {/* Subject grid */}
+        <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
+          {SUBJECT_DEFS.map(s=>{
+            const ids = s.sets
+              ? s.sets.flatMap(set=>getOrder(`${s.id}_${set.id}`))
+              : getOrder(s.id);
+            const p = getProgress(ids);
+            return (
+              <div key={s.id} className="subj-card fade-up"
+                onClick={()=>{setView(s.id);setReorderMode(false);setFilter("all");setFilterPri("all");}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                  <span style={{background:dm?s.color+"22":s.light,color:s.text,borderRadius:7,padding:"3px 9px",
+                    fontSize:"0.63rem",fontWeight:700,letterSpacing:"0.05em",
+                    border:`1px solid ${s.color}${dm?"44":"22"}`}}>{s.short}</span>
+                  <Ring pct={p.pct} color={s.color} track={dm?s.color+"22":s.light} size={40}/>
+                </div>
+                <div style={{fontSize:"0.72rem",color:T.secondary,lineHeight:1.45,marginBottom:10,fontWeight:400}}>{s.name}</div>
+                <ProgBar pct={p.pct} color={s.color} h={4}/>
+                <div style={{display:"flex",gap:10,fontSize:"0.62rem",marginTop:7}}>
+                  <span style={{color:"#047857",fontWeight:500}}>{p.done}✓</span>
+                  <span style={{color:"#b45309",fontWeight:500}}>{p.inp}⟳</span>
+                  <span style={{color:T.muted}}>{p.total-p.done-p.inp}○</span>
+                  <span style={{color:"#0e7490",fontWeight:500,marginLeft:"auto"}}>🎓{ids.filter(id=>getTopic(id).classAttended).length}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </div>
+
+      {editingName&&<EditNameModal/>}
+      {logoutConfirm&&<LogoutModal/>}
+    </div>
+  );
+
+  // ── SUBJECT VIEW ──
+  const subIds = subject.sets
+    ? subject.sets.flatMap(set=>getOrder(`${subject.id}_${set.id}`))
+    : getOrder(subject.id);
+  const sp = getProgress(subIds);
+
+  const renderRows = (sKey, ids) => ids.map((id, idx) => {
+    const state = getTopic(id);
+    if (!reorderMode && filterStatus!=="all" && state.status!==filterStatus) return null;
+    if (!reorderMode && filterPri!=="all" && (state.priority||"medium")!==filterPri) return null;
+    if (!reorderMode && filterClass!=="all") {
+      const attended = !!state.classAttended;
+      if (filterClass==="attended" && !attended) return null;
+      if (filterClass==="notyet" && attended) return null;
+    }
+    const s = SS[state.status], p = PS[state.priority||"medium"];
+    const isDone = state.status==="done";
+    return (
+      <div key={id} className="chapter-row"
+        style={{borderLeftColor:reorderMode?"#d6d3d1":s.border,opacity:isDone?0.7:1}}>
+
+        {reorderMode&&(
+          <div style={{display:"flex",flexDirection:"column",gap:3,flexShrink:0,paddingTop:1}}>
+            {[[-1,"▲"],[1,"▼"]].map(([d,ic])=>{
+              const dis = d===-1?idx===0:idx===ids.length-1;
+              return <button key={d} onClick={()=>moveChapter(sKey,idx,d)} disabled={dis}
+                style={{background:dis?T.page:T.btn,color:dis?T.borderBtn:T.subtle,
+                  border:"none",borderRadius:5,width:24,height:24,cursor:dis?"default":"pointer",
+                  fontSize:"0.58rem",display:"flex",alignItems:"center",justifyContent:"center"}}>{ic}</button>;
+            })}
+          </div>
+        )}
+
+        <div style={{flex:1,minWidth:0}}>
+          <div style={{fontSize:"0.82rem",lineHeight:1.45,fontWeight:isDone?400:500,
+            color:isDone?T.muted:T.primary,textDecoration:isDone?"line-through":"none",
+            marginBottom:reorderMode?0:8}}>
+            {st.chapterNames[id]||"(Untitled)"}
+          </div>
+
+          {!reorderMode&&(
+            <div style={{display:"flex",gap:5,flexWrap:"wrap",alignItems:"center"}}>
+              <button onClick={()=>setTopic(id,{status:STATUS_SEQ[(STATUS_SEQ.indexOf(state.status)+1)%3]})}
+                style={{background:s.bg,color:s.c,border:`1px solid ${s.border}`,borderRadius:20,
+                  padding:"3px 10px",fontSize:"0.66rem",fontWeight:600,cursor:"pointer",transition:"all 0.15s"}}>
+                {s.l}</button>
+              <button onClick={()=>setTopic(id,{priority:PRI_SEQ[(PRI_SEQ.indexOf(state.priority||"medium")+1)%3]})}
+                style={{background:p.bg,color:p.c,border:`1px solid ${p.border}`,borderRadius:20,
+                  padding:"3px 10px",fontSize:"0.66rem",fontWeight:600,cursor:"pointer",transition:"all 0.15s"}}>
+                {p.l}</button>
+              <button onClick={()=>{setNoteModal(id);setNoteText(state.note||"");}}
+                style={{background:state.note?(dm?subject.color+"22":subject.light):T.btn,
+                  color:state.note?subject.text:T.muted,
+                  border:`1px solid ${state.note?subject.color+"35":T.borderBtn}`,
+                  borderRadius:20,padding:"3px 10px",fontSize:"0.66rem",cursor:"pointer",transition:"all 0.15s"}}>
+                {state.note?"📝 Note":"+ Note"}</button>
+              <button onClick={()=>setTopic(id,{classAttended:!state.classAttended})}
+                style={{background:state.classAttended?(dm?"rgba(16,185,129,0.18)":"#ecfdf5"):T.btn,
+                  color:state.classAttended?"#047857":T.muted,
+                  border:`1px solid ${state.classAttended?(dm?"rgba(16,185,129,0.4)":"#a7f3d0"):T.borderBtn}`,
+                  borderRadius:20,padding:"3px 10px",fontSize:"0.66rem",cursor:"pointer",transition:"all 0.15s",
+                  fontWeight:state.classAttended?600:400}}>
+                {state.classAttended?"🎓 Class ✓":"🎓 Class"}</button>
+              <div style={{display:"flex",gap:4,marginLeft:1}}>
+                {["r1","r2","r3"].map((rk,ri)=>{
+                  const on = !!state[rk];
+                  const t = RTOGGLE[ri];
+                  const handleRev = () => {
+                    const newOn = !on;
+                    const patch = {[rk]: newOn};
+                    if (newOn) {
+                      if (rk==="r3") { patch.status = "done"; }
+                      else { if (state.status === "pending") patch.status = "inprogress"; }
+                    } else {
+                      if (rk==="r3") { patch.status = (state.r1 || state.r2) ? "inprogress" : "pending"; }
+                    }
+                    setTopic(id, patch);
+                  };
+                  return (
+                    <button key={rk} onClick={handleRev}
+                      title={`Revision ${ri+1} ${on?"complete":"pending"}`}
+                      style={{
+                        background:on?t.onBg:T.btn,
+                        color:on?t.on:dm?"#3d3a37":"#c4bdb7",
+                        border:`1.5px solid ${on?t.onBorder:T.borderBtn}`,
+                        borderRadius:7,padding:"3px 8px",fontSize:"0.63rem",fontWeight:700,
+                        cursor:"pointer",letterSpacing:"0.04em",
+                        transition:"all 0.17s ease",
+                        boxShadow:on?`0 1px 4px ${t.onBorder}`:"none",
+                      }}>
+                      {on?"✓ ":""}R{ri+1}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
+
+          {!reorderMode&&state.note&&(
+            <div style={{marginTop:7,background:T.card2,border:`1px solid ${T.border}`,borderRadius:8,
+              padding:"6px 10px",fontSize:"0.71rem",color:T.subtle,lineHeight:1.5,transition:"all 0.25s"}}>
+              {state.note}
+            </div>
+          )}
+        </div>
+
+        {reorderMode&&(
+          <button onClick={()=>delChapter(sKey,id)}
+            style={{background:"#fef2f2",color:"#b91c1c",border:"1px solid #fecaca",borderRadius:7,
+              padding:"4px 9px",fontSize:"0.7rem",cursor:"pointer",flexShrink:0,
+              alignSelf:"center",fontWeight:600}}>✕</button>
+        )}
+      </div>
+    );
+  });
+
+  const renderAdd = sKey => (
+    <div style={{display:"flex",gap:8,marginTop:6,marginBottom:10}}>
+      <input value={addInputs[sKey]||""}
+        onChange={e=>setAddInputs(a=>({...a,[sKey]:e.target.value}))}
+        onKeyDown={e=>e.key==="Enter"&&addChapter(sKey)}
+        placeholder="Add a topic or chapter…"
+        style={{flex:1,background:T.input,border:`1.5px dashed ${T.borderDashed}`,borderRadius:10,
+          padding:"9px 13px",color:T.primary,fontSize:"0.79rem",outline:"none",transition:"all 0.25s"}}/>
+      <button onClick={()=>addChapter(sKey)}
+        style={{background:subject.color,color:"#fff",border:"none",borderRadius:10,
+          padding:"9px 16px",fontSize:"0.78rem",cursor:"pointer",fontWeight:700,
+          whiteSpace:"nowrap",boxShadow:`0 2px 8px ${subject.color}45`}}>+ Add</button>
+    </div>
+  );
+
+  return (
+    <div style={{minHeight:"100vh",background:T.page,transition:"background 0.25s"}}>
+      {/* Subject header */}
+      <div style={{background:T.header,borderBottom:`1.5px solid ${T.border}`,padding:"12px 16px",
+        position:"sticky",top:0,zIndex:10,
+        boxShadow:`0 2px 10px ${dm?"rgba(0,0,0,0.3)":"rgba(0,0,0,0.05)"}`,
+        transition:"background 0.25s,border-color 0.25s"}}>
+        <div style={{display:"flex",alignItems:"center",gap:8,marginBottom:9}}>
+          <button onClick={()=>{setView("dashboard");setNoteModal(null);}}
+            style={{background:T.btn,border:`1.5px solid ${T.borderBtn}`,color:T.secondary,cursor:"pointer",
+              borderRadius:8,padding:"4px 11px",fontSize:"0.74rem",fontWeight:500}}>← Back</button>
+          <span style={{background:dm?subject.color+"22":subject.light,color:subject.text,borderRadius:7,padding:"3px 9px",
+            fontSize:"0.65rem",fontWeight:700,border:`1px solid ${subject.color}${dm?"44":"28"}`,letterSpacing:"0.04em"}}>
+            {subject.short}</span>
+
+          <div style={{marginLeft:"auto",display:"flex",gap:6,alignItems:"center"}}>
+            {saving&&<span style={{fontSize:"0.6rem",color:"#b45309",
+              animation:"pulse 1s ease infinite"}}>Saving…</span>}
+            {/* Dark toggle in subject view */}
+            <DarkToggle/>
+            <button onClick={()=>{setReorderMode(r=>!r);setFilter("all");setFilterPri("all");setFilterClass("all");}}
+              style={{background:reorderMode?subject.color:T.btn,
+                color:reorderMode?"#fff":T.secondary,
+                border:reorderMode?"none":`1.5px solid ${T.borderBtn}`,
+                borderRadius:8,padding:"5px 14px",fontSize:"0.72rem",cursor:"pointer",fontWeight:600}}>
+              {reorderMode?"✓ Done":"⇅ Reorder"}</button>
+          </div>
+        </div>
+
+        <div style={{display:"flex",justifyContent:"space-between",alignItems:"baseline",marginBottom:8}}>
+          <div style={{fontFamily:"'Playfair Display',serif",fontSize:"0.94rem",fontWeight:700,
+            color:T.primary}}>{subject.name}</div>
+          <div style={{fontSize:"0.65rem",color:T.muted}}>Hi {user.name} 👋</div>
+        </div>
+        <ProgBar pct={sp.pct} color={subject.color} h={5}/>
+        <div style={{display:"flex",justifyContent:"space-between",fontSize:"0.65rem",
+          color:T.muted,marginTop:4}}>
+          <span>{sp.done}/{sp.total} topics done · <span style={{color:"#047857",fontWeight:500}}>{subIds.filter(id=>getTopic(id).classAttended).length}🎓 classes</span></span>
+          <span style={{color:subject.text,fontWeight:600}}>{sp.pct}% complete</span>
+        </div>
+      </div>
+
+      {/* Filter bar */}
+      {!reorderMode&&(
+        <div style={{background:T.page,borderBottom:`1px solid ${T.border}`,padding:"8px 16px 8px",
+          transition:"background 0.25s,border-color 0.25s"}}>
+          <div style={{display:"flex",gap:5,overflowX:"auto",marginBottom:6,paddingBottom:2}}>
+            <span style={{fontSize:"0.6rem",color:T.muted,fontWeight:600,
+              letterSpacing:"0.08em",textTransform:"uppercase",
+              alignSelf:"center",flexShrink:0,paddingRight:2}}>Status</span>
+            {[["all","All"],["pending","○ Pending"],["inprogress","⟳ Active"],["done","✓ Done"]].map(([f,l])=>(
+              <button key={f} onClick={()=>setFilter(f)}
+                style={{background:filterStatus===f?subject.color:T.card,
+                  color:filterStatus===f?"#fff":T.subtle,
+                  border:filterStatus===f?"none":`1.5px solid ${T.borderBtn}`,
+                  borderRadius:20,padding:"4px 12px",fontSize:"0.68rem",cursor:"pointer",
+                  whiteSpace:"nowrap",fontWeight:filterStatus===f?600:400,
+                  boxShadow:filterStatus===f?`0 2px 6px ${subject.color}45`:"none",
+                  flexShrink:0,transition:"all 0.15s"}}>
+                {l}
+              </button>
+            ))}
+          </div>
+          <div style={{display:"flex",gap:5,overflowX:"auto",paddingBottom:2}}>
+            <span style={{fontSize:"0.6rem",color:T.muted,fontWeight:600,
+              letterSpacing:"0.08em",textTransform:"uppercase",
+              alignSelf:"center",flexShrink:0,paddingRight:2}}>Priority</span>
+            {[
+              ["all","All",T.subtle,T.card,T.borderBtn],
+              ["high","🔴 High","#b91c1c","#fef2f2","#fecaca"],
+              ["medium","🟡 Med","#92400e","#fffbeb","#fde68a"],
+              ["low","🔵 Low","#1d4ed8","#eff6ff","#bfdbfe"],
+            ].map(([f,l,tc,bg,bd])=>{
+              const active = filterPri===f;
+              return (
+                <button key={f} onClick={()=>setFilterPri(f)}
+                  style={{background:active?tc:bg,
+                    color:active?"#fff":tc,
+                    border:`1.5px solid ${active?tc:bd}`,
+                    borderRadius:20,padding:"4px 12px",fontSize:"0.68rem",cursor:"pointer",
+                    whiteSpace:"nowrap",fontWeight:active?700:500,
+                    boxShadow:active?`0 2px 6px ${tc}55`:"none",
+                    flexShrink:0,transition:"all 0.15s"}}>
+                  {l}
+                </button>
+              );
+            })}
+          </div>
+          <div style={{display:"flex",gap:5,overflowX:"auto",paddingBottom:2,marginTop:6}}>
+            <span style={{fontSize:"0.6rem",color:T.muted,fontWeight:600,
+              letterSpacing:"0.08em",textTransform:"uppercase",
+              alignSelf:"center",flexShrink:0,paddingRight:2}}>Classes</span>
+            {[
+              ["all","All",T.subtle,T.card,T.borderBtn],
+              ["attended","🎓 Attended","#047857","#ecfdf5","#a7f3d0"],
+              ["notyet","⏳ Not Yet","#b45309","#fffbeb","#fde68a"],
+            ].map(([f,l,tc,bg,bd])=>{
+              const active = filterClass===f;
+              return (
+                <button key={f} onClick={()=>setFilterClass(f)}
+                  style={{background:active?tc:bg,
+                    color:active?"#fff":tc,
+                    border:`1.5px solid ${active?tc:bd}`,
+                    borderRadius:20,padding:"4px 12px",fontSize:"0.68rem",cursor:"pointer",
+                    whiteSpace:"nowrap",fontWeight:active?700:500,
+                    boxShadow:active?`0 2px 6px ${tc}55`:"none",
+                    flexShrink:0,transition:"all 0.15s"}}>
+                  {l}
+                </button>
+              );
+            })}
+          </div>
+        </div>
+      )}
+
+      {reorderMode&&(
+        <div style={{background:"#fffbeb",padding:"8px 16px",fontSize:"0.71rem",
+          color:"#92400e",borderBottom:"1px solid #fde68a",fontWeight:500}}>
+          ▲▼ to reorder · ✕ to remove · type below to add new topics
+        </div>
+      )}
+
+      <div style={{padding:"14px 16px 50px"}}>
+        {subject.sets
+          ? subject.sets.map(set=>{
+              const sKey = `${subject.id}_${set.id}`;
+              return (
+                <div key={set.id} style={{marginBottom:28}}>
+                  <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:12}}>
+                    <div style={{fontFamily:"'Playfair Display',serif",fontSize:"0.9rem",
+                      fontWeight:700,color:subject.text}}>{set.name}
+                      <span style={{fontFamily:"'DM Sans',sans-serif",fontWeight:500,fontSize:"0.63rem",
+                        color:T.muted,marginLeft:8}}>
+                        🎓 {getOrder(sKey).filter(id=>getTopic(id).classAttended).length}/{getOrder(sKey).length} classes
+                      </span>
+                    </div>
+                    <span style={{background:dm?subject.color+"22":subject.light,color:subject.text,
+                      border:`1px solid ${subject.color}28`,borderRadius:20,
+                      padding:"2px 10px",fontSize:"0.63rem",fontWeight:600}}>⏱ {set.timeWindow}</span>
+                  </div>
+                  {renderRows(sKey,getOrder(sKey))}
+                  {renderAdd(sKey)}
+                </div>
+              );
+            })
+          : <>{renderRows(subject.id,getOrder(subject.id))}{renderAdd(subject.id)}</>
+        }
+      </div>
+
+      {editingName&&<EditNameModal/>}
+      {logoutConfirm&&<LogoutModal/>}
+
+      {/* Note Modal */}
+      {noteModal&&(
+        <div className="modal-bg">
+          <div style={{background:T.card,borderRadius:18,padding:22,width:"100%",maxWidth:400,
+            border:`1.5px solid ${T.border}`,
+            boxShadow:`0 24px 60px ${dm?"rgba(0,0,0,0.5)":"rgba(0,0,0,0.12)"}`,
+            transition:"background 0.25s,border-color 0.25s"}}>
+            <div style={{fontFamily:"'Playfair Display',serif",fontWeight:700,fontSize:"1rem",
+              color:T.primary,marginBottom:4}}>Revision Notes</div>
+            <div style={{fontSize:"0.74rem",color:T.muted,marginBottom:14,lineHeight:1.4,
+              borderBottom:`1px solid ${T.border}`,paddingBottom:11}}>
+              {st.chapterNames[noteModal]}
+            </div>
+            <textarea value={noteText} onChange={e=>setNoteText(e.target.value)}
+              placeholder="Notes, mnemonics, key points, case laws…"
+              style={{width:"100%",minHeight:130,background:T.input,border:`1.5px solid ${T.border}`,
+                borderRadius:10,padding:11,color:T.primary,fontSize:"0.83rem",resize:"vertical",
+                boxSizing:"border-box",outline:"none",lineHeight:1.6,transition:"all 0.25s"}}/>
+            <div style={{display:"flex",gap:8,marginTop:12}}>
+              <button onClick={()=>{setTopic(noteModal,{note:noteText});setNoteModal(null);}}
+                style={{flex:1,background:subject.color,color:"#fff",border:"none",borderRadius:10,
+                  padding:11,cursor:"pointer",fontWeight:700,fontSize:"0.85rem",
+                  boxShadow:`0 2px 8px ${subject.color}45`}}>Save Note</button>
+              <button onClick={()=>setNoteModal(null)}
+                style={{flex:1,background:T.btn,color:T.secondary,border:`1.5px solid ${T.borderBtn}`,
+                  borderRadius:10,padding:11,cursor:"pointer",fontSize:"0.85rem",fontWeight:500}}>Cancel</button>
+            </div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// ──────────────────────────────────────────────────────────
+// ROOT
+// ──────────────────────────────────────────────────────────
+function Root() {
+  const [authState, setAuthState] = useState("checking");
+  const [currentUser, setCurrentUser] = useState(null);
+
+  // Dark mode state — persisted in localStorage
+  const [darkMode, setDarkMode] = useState(() => {
+    try { return localStorage.getItem('cafinal_dark') === 'true'; } catch(e) { return false; }
+  });
+
+  const toggleDark = () => setDarkMode(d => !d);
+
+  useEffect(() => {
+    document.documentElement.setAttribute('data-theme', darkMode ? 'dark' : 'light');
+    try { localStorage.setItem('cafinal_dark', darkMode); } catch(e) {}
+  }, [darkMode]);
+
+  useEffect(() => {
+    const sess = sessionGet();
+    if (sess && sess.username && sess.name) {
+      setCurrentUser(sess);
+      setAuthState("app");
+    } else {
+      setAuthState("auth");
+    }
+  }, []);
+
+  const handleLogin = user => { sessionSet(user); setCurrentUser(user); setAuthState("app"); };
+  const handleLogout = () => { setCurrentUser(null); setAuthState("auth"); };
+
+  const T = getT(darkMode);
+
+  if (authState==="checking") return (
+    <ThemeContext.Provider value={{ darkMode, toggleDark }}>
+      <div style={{display:"flex",alignItems:"center",justifyContent:"center",
+        height:"100vh",background:T.page,flexDirection:"column",gap:12,transition:"background 0.25s"}}>
+        <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",fontWeight:700,
+          color:T.primary}}>📚</div>
+        <div style={{color:T.muted,fontSize:"0.8rem"}}>Loading…</div>
+      </div>
+    </ThemeContext.Provider>
+  );
+
+  return (
+    <ThemeContext.Provider value={{ darkMode, toggleDark }}>
+      {authState==="auth"
+        ? <AuthScreen onLogin={handleLogin}/>
+        : <TrackerApp user={currentUser} onLogout={handleLogout}/>
+      }
+    </ThemeContext.Provider>
+  );
+}
+
+ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(Root));
+</script>
+</body>
+</html>
