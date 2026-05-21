@@ -123,262 +123,268 @@
 <div id="root"></div>
 <script type="text/babel">
 
-const EXAM_DATE = new Date("2026-11-01");
-const getDays = () => Math.max(0, Math.ceil((EXAM_DATE - new Date()) / 86400000));
+// ── Exam date options ──
+const EXAM_OPTIONS = [
+  { label: "Nov 2026", date: "2026-11-01", display: "1 November 2026" },
+  { label: "May 2027", date: "2027-05-01", display: "1 May 2027" },
+  { label: "Nov 2027", date: "2027-11-01", display: "1 November 2027" },
+  { label: "May 2028", date: "2028-05-01", display: "1 May 2028" },
+  { label: "Nov 2028", date: "2028-11-01", display: "1 November 2028" },
+  { label: "May 2029", date: "2029-05-01", display: "1 May 2029" },
+  { label: "Nov 2029", date: "2029-11-01", display: "1 November 2029" },
+];
+function getDaysTo(dateStr) {
+  return Math.max(0, Math.ceil((new Date(dateStr) - new Date()) / 86400000));
+}
 const uid = () => Math.random().toString(36).slice(2, 10);
 
 const SUBJECT_DEFS = [
   // ── Paper 1: Financial Reporting ──
   { id:"fr", name:"Financial Reporting", short:"FR", color:"#2563EB", light:"#eff6ff", text:"#1d4ed8",
-    chapters:[
-      // ── Section I (10–15%) ──
-      "[Sec I | 10–15%] Applicability Criteria & Statutory Provisions of Ind AS",
-      "[Sec I | 10–15%] Division II of Schedule III & Guidance Note",
-      // ── Section II (5–10%) ──
-      "[Sec II | 5–10%] Ind AS 1 – Presentation of Financial Statements",
-      "[Sec II | 5–10%] Ind AS 34 – Interim Financial Reporting",
-      "[Sec II | 5–10%] Ind AS 7 – Statement of Cash Flows",
-      "[Sec II | 5–10%] Ind AS 8 – Accounting Policies, Changes & Errors",
-      "[Sec II | 5–10%] Ind AS 10 – Events after Reporting Period",
-      "[Sec II | 5–10%] Ind AS 113 – Fair Value Measurement",
-      "[Sec II | 5–10%] Ind AS 115 – Revenue from Contracts with Customers",
-      // ── Section III (15–25%) ──
-      "[Sec III | 15–25%] Ind AS 2 – Inventories",
-      "[Sec III | 15–25%] Ind AS 16 – Property, Plant & Equipment",
-      "[Sec III | 15–25%] Ind AS 116 – Leases",
-      "[Sec III | 15–25%] Ind AS 23 – Borrowing Costs",
-      "[Sec III | 15–25%] Ind AS 36 – Impairment of Assets",
-      "[Sec III | 15–25%] Ind AS 38 – Intangible Assets",
-      "[Sec III | 15–25%] Ind AS 40 – Investment Property",
-      "[Sec III | 15–25%] Ind AS 105 – Non-current Assets Held for Sale",
-      "[Sec III | 15–25%] Ind AS 19 – Employee Benefits",
-      "[Sec III | 15–25%] Ind AS 37 – Provisions & Contingent Liabilities",
-      // ── Section IV (15–20%) ──
-      "[Sec IV | 15–20%] Ind AS 12 – Income Taxes",
-      "[Sec IV | 15–20%] Ind AS 21 – Effects of Foreign Exchange Rates",
-      "[Sec IV | 15–20%] Ind AS 24 – Related Party Disclosures",
-      "[Sec IV | 15–20%] Ind AS 33 – Earnings Per Share",
-      "[Sec IV | 15–20%] Ind AS 108 – Operating Segments",
-      "[Sec IV | 15–20%] Ind AS 20 – Government Grants",
-      "[Sec IV | 15–20%] Ind AS 102 – Share Based Payment",
-      "[Sec IV | 15–20%] Ind AS 41 – Agriculture",
-      // ── Section V (10–15%) ──
-      "[Sec V | 10–15%] Ind AS 32 – Financial Instruments: Presentation",
-      "[Sec V | 10–15%] Ind AS 109 – Financial Instruments: Recognition & Measurement",
-      "[Sec V | 10–15%] Ind AS 107 – Financial Instruments: Disclosures",
-      // ── Section VI (10–20%) ──
-      "[Sec VI | 10–20%] Ind AS 103 – Business Combinations",
-      "[Sec VI | 10–20%] Ind AS 110 – Consolidated Financial Statements",
-      "[Sec VI | 10–20%] Ind AS 111 – Joint Arrangements",
-      "[Sec VI | 10–20%] Ind AS 27 – Separate Financial Statements",
-      "[Sec VI | 10–20%] Ind AS 28 – Investments in Associates & JVs",
-      "[Sec VI | 10–20%] Ind AS 112 – Disclosure of Interests in Other Entities",
-      // ── Section VII (5–10%) ──
-      "[Sec VII | 5–10%] Ind AS 101 – First-time Adoption of Ind AS",
-      // ── Section VIII (5–10%) ──
-      "[Sec VIII | 5–10%] Analysis of Financial Statements (as per Ind AS)",
-      "[Sec VIII | 5–10%] Ethics with Accounting Concepts",
-      "[Sec VIII | 5–10%] Technology and Accounting",
+    sets:[
+      { id:"m1", name:"Module 1", timeWindow:"Ch 1–4", chapters:[
+        "Ch 1 | Introduction to Indian Accounting Standards",
+        "Ch 2 | Conceptual Framework for Financial Reporting under Ind AS",
+        "Ch 3 Unit 1 | Ind AS 1 – Presentation of Financial Statements",
+        "Ch 3 Unit 2 | Ind AS 34 – Interim Financial Reporting",
+        "Ch 3 Unit 3 | Ind AS 7 – Statement of Cash Flows",
+        "Ch 4 Unit 1 | Ind AS 8 – Accounting Policies, Changes in Accounting Estimates and Errors",
+        "Ch 4 Unit 2 | Ind AS 10 – Events after the Reporting Period",
+        "Ch 4 Unit 3 | Ind AS 113 – Fair Value Measurement",
+        "Annexure | Division II of Schedule III to the Companies Act, 2013",
+      ]},
+      { id:"m2", name:"Module 2", timeWindow:"Ch 5", chapters:[
+        "Ch 5 Unit 1 | Ind AS 2 – Inventories",
+        "Ch 5 Unit 2 | Ind AS 16 – Property, Plant and Equipment",
+        "Ch 5 Unit 3 | Ind AS 23 – Borrowing Costs",
+        "Ch 5 Unit 4 | Ind AS 36 – Impairment of Assets",
+        "Ch 5 Unit 5 | Ind AS 38 – Intangible Assets",
+        "Ch 5 Unit 6 | Ind AS 40 – Investment Property",
+        "Ch 5 Unit 7 | Ind AS 105 – Non-current Assets Held for Sale and Discontinued Operations",
+        "Ch 5 Unit 8 | Ind AS 116 – Leases",
+      ]},
+      { id:"m3", name:"Module 3", timeWindow:"Ch 6–8", chapters:[
+        "Ch 6 Unit 1 | Ind AS 19 – Employee Benefits",
+        "Ch 6 Unit 2 | Ind AS 37 – Provisions, Contingent Liabilities and Contingent Assets",
+        "Ch 7 Unit 1 | Ind AS 12 – Income Taxes",
+        "Ch 7 Unit 2 | Ind AS 21 – The Effects of Changes in Foreign Exchange Rates",
+        "Ch 8 Unit 1 | Ind AS 24 – Related Party Disclosures",
+        "Ch 8 Unit 2 | Ind AS 33 – Earnings per Share",
+        "Ch 8 Unit 3 | Ind AS 108 – Operating Segments",
+      ]},
+      { id:"m4", name:"Module 4", timeWindow:"Ch 9–11", chapters:[
+        "Ch 9 | Ind AS 115 – Revenue from Contracts with Customers",
+        "Ch 10 Unit 1 | Ind AS 41 – Agriculture",
+        "Ch 10 Unit 2 | Ind AS 20 – Accounting for Government Grants and Disclosure of Government Assistance",
+        "Ch 10 Unit 3 | Ind AS 102 – Share Based Payment",
+        "Ch 11 Unit 1 | Financial Instruments: Scope and Definitions",
+        "Ch 11 Unit 2 | Classification and Measurement of Financial Assets and Financial Liabilities",
+        "Ch 11 Unit 3 | Financial Instruments: Equity and Financial Liabilities",
+        "Ch 11 Unit 4 | Derivatives and Embedded Derivatives",
+        "Ch 11 Unit 5 | Recognition and Derecognition of Financial Instruments",
+        "Ch 11 Unit 6 | Hedge Accounting",
+        "Ch 11 Unit 7 | Disclosures",
+      ]},
+      { id:"m5", name:"Module 5", timeWindow:"Ch 12–17", chapters:[
+        "Ch 12 | Ind AS 103 – Business Combinations",
+        "Ch 13 Unit 1 | Introduction to Consolidated and Separate Financial Statements",
+        "Ch 13 Unit 2 | Important Definitions",
+        "Ch 13 Unit 3 | Consolidated Financial Statements",
+        "Ch 13 Unit 4 | Ind AS 110 – Consolidation Procedure for Subsidiaries",
+        "Ch 13 Unit 5 | Ind AS 111 – Joint Arrangements",
+        "Ch 13 Unit 6 | Ind AS 28 – Investment in Associates & Joint Ventures",
+        "Ch 13 Unit 7 | Ind AS 27 – Separate Financial Statements",
+        "Ch 13 Unit 8 | Disclosures",
+        "Ch 14 | Ind AS 101 – First-time Adoption of Indian Accounting Standards",
+        "Ch 15 | Analysis of Financial Statements",
+        "Ch 16 | Professional and Ethical Duty of a Chartered Accountant",
+        "Ch 17 | Accounting and Technology",
+      ]},
     ]},
 
   // ── Paper 2: Advanced Financial Management ──
   { id:"afm", name:"Advanced Financial Management", short:"AFM", color:"#7C3AED", light:"#f5f3ff", text:"#6d28d9",
     chapters:[
-      // ── Section I (8–15%) ──
-      "[Sec I | 8–15%] Financial Policy, Corporate Strategy & Role of CFO",
-      "[Sec I | 8–15%] Risk Management & Value at Risk (VaR)",
-      "[Sec I | 8–15%] Advanced Capital Budgeting – Risk, APV & Replacement Cycle",
-      "[Sec I | 8–15%] Security Analysis – Fundamental, Technical Analysis & EMH",
-      // ── Section II (20–30%) ──
-      "[Sec II | 20–30%] Theory of Valuation & Return Concepts",
-      "[Sec II | 20–30%] Equity Risk Premium & Required Return on Equity",
-      "[Sec II | 20–30%] Approaches to Valuation of Equity Shares",
-      "[Sec II | 20–30%] Valuation of Preference Shares & Bonds/Debentures",
-      "[Sec II | 20–30%] Role & Responsibilities of Valuers",
-      // ── Section II–III (20–30%) ──
-      "[Sec II–III | 20–30%] Portfolio Analysis, Selection & Capital Market Theory",
-      "[Sec II–III | 20–30%] Portfolio Revision, Evaluation & Asset Allocation",
-      "[Sec II–III | 20–30%] Fixed Income Portfolio & Alternative Investments (RE, Gold, PE, REITs, ETFs)",
-      "[Sec II–III | 20–30%] Securitization – Concept, Mechanism, Instruments & Pricing",
-      "[Sec II–III | 20–30%] Mutual Funds – Types, Evaluation & Role of Fund Manager",
-      "[Sec II–III | 20–30%] Derivatives – Futures & Forwards: Pricing & Hedging",
-      "[Sec II–III | 20–30%] Derivatives – Options: Pricing, Greeks & Exotic Options",
-      "[Sec II–III | 20–30%] Swaps, Credit Derivatives, Real Options & Commodity/Weather Derivatives",
-      // ── Section IV (20–25%) ──
-      "[Sec IV | 20–25%] Foreign Exchange Exposure & Risk Management",
-      "[Sec IV | 20–25%] International Capital Budgeting & Raising Funds from International Sources",
-      "[Sec IV | 20–25%] International Working Capital, Sovereign Funds & GIFT City",
-      "[Sec IV | 20–25%] Interest Rate Risk Management – FRA, Futures, Options & Swaps",
-      // ── Section V (10–15%) ──
-      "[Sec V | 10–15%] Business Valuation – DCF, Relative Valuation, EVA & MVA",
-      "[Sec V | 10–15%] Valuation of Startups, Distressed Companies & Digital Platforms",
-      "[Sec V | 10–15%] Mergers, Acquisitions & Corporate Restructuring",
-      "[Sec V | 10–15%] Cross-border Mergers & SPACs",
-      // ── Section VI (2–5%) ──
-      "[Sec VI | 2–5%] Startup Finance – Sources of Funding, Unicorn Concept & Succession Planning",
+      "Ch 1 | Financial Policy and Corporate Strategy – Role of CFO, Strategic Decision Making Framework, Financial Planning & Sustainable Growth",
+      "Ch 2 | Risk Management – Types of Risk, Financial Risk Evaluation, Value-at-Risk (VaR) & Risk Management Methods",
+      "Ch 3 | Advanced Capital Budgeting Decisions – Risk in Investment, Replacement Decision & Adjusted Present Value (APV)",
+      "Ch 4 | Security Analysis – Fundamental Analysis, Technical Analysis, Efficient Market Theory (EMH) & Equity Research",
+      "Ch 5 | Security Valuation – Return Concepts, Equity Risk Premium, Valuation of Equity / Preference Shares / Bonds & Role of Valuers",
+      "Ch 6 | Portfolio Management – Portfolio Theories, Markowitz Model, CAPM, APT, Portfolio Evaluation, Revision, Asset Allocation, Fixed Income Portfolio & Alternative Investments",
+      "Ch 7 | Securitization – Concept, Mechanism, Participants, Instruments, Pricing, Risks, Tokenization & Securitization in India",
+      "Ch 8 | Mutual Funds – Classification, Types of Schemes, Evaluation, Role of Fund Manager & Role of FIIs",
+      "Ch 9 | Derivatives Analysis and Valuation – Forwards, Futures, Options, Swaps, Credit Derivatives, Real Options, Commodity, Weather & Electricity Derivatives",
+      "Ch 10 | Foreign Exchange Exposure and Risk Management – Exchange Rate Theories, Forex Exposure, Hedging via Forwards/Futures/Options/Swaps & Exposure Management Strategies",
+      "Ch 11 | International Financial Management – International Capital Budgeting, International Sources of Finance, GIFT City, Sovereign Funds & International Working Capital Management",
+      "Ch 12 | Interest Rate Risk Management – Benchmark Rates, Interest Rate Risk & Hedging via FRA/Futures/Options/Swaps",
+      "Ch 13 | Business Valuation – DCF, Relative Valuation, EVA/MVA, Fair Value, Valuation of Distressed Companies, Startups, Digital Platforms & Impact of ESG",
+      "Ch 14 | Mergers, Acquisitions and Corporate Restructuring – M&A Framework, Financial & Ownership Restructuring, Takeover Tactics, Divestiture, Cross-Border M&A & SPACs",
+      "Ch 15 | Startup Finance – Startup Financing Methods, Pitch Presentation, Unicorn Concept, Modes of Finance, Venture Capital in India, Startup India & Succession Planning",
     ]},
 
   // ── Paper 3: Advanced Auditing, Assurance & Professional Ethics ──
   { id:"aaa", name:"Advanced Auditing & Professional Ethics", short:"AAA", color:"#059669", light:"#ecfdf5", text:"#047857",
-    chapters:[
-      // ── Section I (45–55%) ──
-      "[Sec I | 45–55%] Quality Control – SQC 1 & SA 220",
-      "[Sec I | 45–55%] General Auditing Principles – SA 240, SA 250, SA 260, SA 299, SA 402",
-      "[Sec I | 45–55%] Audit Planning, Strategy & Execution – SA 300, SA 450, SA 520, SA 540",
-      "[Sec I | 45–55%] Using Work of Internal Auditors & Expert – SA 610, SA 620",
-      "[Sec I | 45–55%] Materiality, Risk Assessment & Internal Control – SA 265, SA 315, SA 320, SA 330",
-      "[Sec I | 45–55%] Audit Evidence – SA 500, SA 501, SA 505, SA 510, SA 530, SA 550",
-      "[Sec I | 45–55%] Completion & Review – SA 560, SA 570, SA 580",
-      "[Sec I | 45–55%] Reporting – SA 700, SA 701, SA 705, SA 706, SA 710, SA 720",
-      "[Sec I | 45–55%] Specialised Areas – SA 800, SA 805, SA 810",
-      "[Sec I | 45–55%] Related Services – SRS 4400 & SRS 4410",
-      "[Sec I | 45–55%] Review of Financial Information – SRE 2400 & SRE 2410",
-      "[Sec I | 45–55%] Prospective Financial Information & Assurance – SAE 3400, SAE 3402, SAE 3420",
-      // ── Section II (3–6%) ──
-      "[Sec II | 3–6%] Digital Auditing & Assurance – CAAT, Data Analytics, AI & Remote Auditing",
-      // ── Section III (17–24%) ──
-      "[Sec III | 17–24%] Group Audits & SA 600 – Work of Another Auditor",
-      "[Sec III | 17–24%] Special Features of Audit of Banks & NBFCs",
-      "[Sec III | 17–24%] Overview of Audit of Public Sector Undertakings",
-      "[Sec III | 17–24%] Internal Audit – Scope, Standards, Audit Trail & Report",
-      "[Sec III | 17–24%] Due Diligence, Investigation & Forensic Accounting",
-      // ── Section IV (3–6%) ──
-      "[Sec IV | 3–6%] Emerging Areas – SDG, ESG & Sustainability Assurance",
-      // ── Section V (17–24%) ──
-      "[Sec V | 17–24%] Professional Ethics – IESBA Code of Ethics",
-      "[Sec V | 17–24%] CA Act 1949 & CA Regulations 1988 – Key Provisions",
-      "[Sec V | 17–24%] Threats, Safeguards & Conceptual Framework of Ethics",
+    sets:[
+      { id:"m1", name:"Module 1", timeWindow:"Ch 1–7", chapters:[
+        "Ch 1 | Quality Control – SQC 1 & SA 220",
+        "Ch 2 | General Auditing Principles & Auditors Responsibilities – SA 240, SA 250, SA 260, SA 299, SA 402",
+        "Ch 3 | Audit Planning, Strategy & Execution – SA 300, SA 450, SA 520, SA 540, SA 610, SA 620",
+        "Ch 4 | Materiality, Risk Assessment & Internal Control – SA 265, SA 330",
+        "Ch 5 | Audit Evidence – SA 500, SA 501, SA 505, SA 510, SA 530, SA 550",
+        "Ch 6 | Completion & Review – SA 560, SA 570, SA 580",
+        "Ch 7 | Reporting – SA 700, SA 701, SA 705, SA 706, SA 710, SA 720",
+      ]},
+      { id:"m2", name:"Module 2", timeWindow:"Ch 8–14", chapters:[
+        "Ch 8 | Specialised Areas – SA 800, SA 805, SA 810",
+        "Ch 9 | Related Services – SRS 4400 & SRS 4410",
+        "Ch 10 | Review of Financial Information – SRE 2400 & SRE 2410",
+        "Ch 11 | Prospective Financial Information & Other Assurance Services – SAE 3400, SAE 3402, SAE 3420",
+        "Ch 12 | Digital Auditing & Assurance – CAAT, Data Analytics, AI & Remote Auditing",
+        "Ch 13 | Group Audits – Consolidated Financial Statements & SA 600",
+        "Ch 14 | Special Features of Audit of Banks & Non-Banking Financial Companies",
+      ]},
+      { id:"m3", name:"Module 3", timeWindow:"Ch 15–19", chapters:[
+        "Ch 15 | Overview of Audit of Public Sector Undertakings – Propriety, Performance & Comprehensive Audit",
+        "Ch 16 | Internal Audit – Scope, Standards, Audit Trail & Report",
+        "Ch 17 | Due Diligence, Investigation & Forensic Accounting",
+        "Ch 18 | Emerging Areas – SDG & ESG Assurance",
+        "Ch 19 | Professional Ethics & Liabilities of Auditors – IESBA Code, CA Act 1949, CA Regulations 1988",
+      ]},
     ]},
 
   // ── Paper 4: Direct Tax Laws & International Taxation ──
   { id:"dt", name:"Direct Tax Laws & International Taxation", short:"DT", color:"#B45309", light:"#fffbeb", text:"#92400e",
-    chapters:[
-      // ── Section I (40–45%) ──
-      "[Sec I | 40–45%] Computation of Income-tax – General Provisions & Alternative Tax Regimes",
-      "[Sec I | 40–45%] Special Tax Regimes & Optimisation of Tax Liability",
-      "[Sec I | 40–45%] Charitable & Religious Trusts, Political Parties & Electoral Trusts",
-      "[Sec I | 40–45%] Business Trusts, Securitisation Trusts, Investment Funds & Other Funds",
-      "[Sec I | 40–45%] Anti-avoidance Provisions – GAAR & Related Measures",
-      "[Sec I | 40–45%] Provisions for Taxation in the Digital Economy",
-      // ── Section II (20–30%) ──
-      "[Sec II | 20–30%] TDS & TCS – Deduction, Collection & Recovery",
-      "[Sec II | 20–30%] Income-tax Authorities",
-      "[Sec II | 20–30%] Assessment Procedures",
-      "[Sec II | 20–30%] Appeals, Revision & Dispute Resolution",
-      "[Sec II | 20–30%] Penalties, Offences, Prosecution & Undisclosed Income",
-      "[Sec II | 20–30%] Miscellaneous Provisions & Tax Audit",
-      // ── Section III (30–35%) ──
-      "[Sec III | 30–35%] Transfer Pricing – Domestic & International",
-      "[Sec III | 30–35%] Non-resident Taxation under Income-tax Act",
-      "[Sec III | 30–35%] Double Taxation Relief & DTAA",
-      "[Sec III | 30–35%] Advance Ruling for Non-residents",
-      "[Sec III | 30–35%] OECD & UN Model Tax Conventions",
-      "[Sec III | 30–35%] Fundamentals of BEPS",
-      "[Sec III | 30–35%] Application & Interpretation of Tax Treaties",
-      "[Sec III | 30–35%] Latest Developments in International Taxation",
+    sets:[
+      { id:"m1", name:"Module 1", timeWindow:"Ch 1–8", chapters:[
+        "Ch 1 | Basic Concepts – Residential Status, Scope of Total Income, Tax Rates & Previous Year/Assessment Year",
+        "Ch 2 | Incomes which do not form part of Total Income – Exempt Incomes under Section 10 & Other Provisions",
+        "Ch 3 | Profits and Gains of Business or Profession – Chargeability, Allowable/Disallowable Expenses, Deemed Profits & Special Provisions",
+        "Ch 4 | Capital Gains – Chargeability, Types of Capital Assets, Computation, Exemptions & Special Cases",
+        "Ch 5 | Income from Other Sources – Chargeability, Specific Incomes, Deductions & Deemed Dividends",
+        "Ch 6 | Income of Other Persons included in Assessee's Total Income – Clubbing Provisions & Deemed Income",
+        "Ch 7 | Aggregation of Income, Set-off or Carry Forward of Losses – Inter-head, Intra-head Set-off & Carry Forward Rules",
+        "Ch 8 | Deductions from Gross Total Income – Chapter VI-A Deductions under Sec 80C to 80U",
+      ]},
+      { id:"m2", name:"Module 2", timeWindow:"Ch 9–12", chapters:[
+        "Ch 9 | Assessment of Various Entities – Firms, LLPs, AOP, BOI, Companies & Co-operative Societies",
+        "Ch 10 | Assessment of Trusts and Institutions, Political Parties and Other Special Entities – Registration, Taxation & Compliance",
+        "Ch 11 | Tax Planning, Tax Avoidance & Tax Evasion – Concepts, GAAR & Anti-avoidance Measures",
+        "Ch 12 | Taxation of Digital Transactions – Equalisation Levy, Digital Economy & Related Provisions",
+      ]},
+      { id:"m3", name:"Module 3", timeWindow:"Ch 13–20", chapters:[
+        "Ch 13 | Deduction, Collection and Recovery of Tax – TDS, TCS, Advance Tax, Self-Assessment & Recovery Provisions",
+        "Ch 14 | Income-tax Authorities – Powers, Jurisdiction, Functions & Obligations",
+        "Ch 15 | Assessment Procedure – Types of Assessment, Search & Seizure, Survey & Related Provisions",
+        "Ch 16 | Appeals and Revision – CIT(A), ITAT, High Court, Supreme Court & Revisionary Powers",
+        "Ch 17 | Dispute Resolution – Faceless Assessment, DRP, Settlement Commission & Dispute Resolution Scheme",
+        "Ch 18 | Miscellaneous Provisions – PAN, Return of Income, Interest, Penalties, Prosecution & Other Provisions",
+        "Ch 19 | Provisions to Counteract Unethical Tax Practices – Benami Transactions, Black Money Act & PMLA",
+        "Ch 20 | Tax Audit and Ethical Compliances – Sec 44AB, Form 3CA/3CB/3CD, Audit Report & Ethics",
+      ]},
+      { id:"m4", name:"Module 4", timeWindow:"Ch 21–28", chapters:[
+        "Ch 21 | Non-resident Taxation – Residential Status, DTAA, Withholding Tax, POEM & Place of Effective Management",
+        "Ch 22 | Double Taxation Relief – Sec 90, 90A & 91, Foreign Tax Credit & Tax Treaty Benefits",
+        "Ch 23 | Advance Rulings – AAR, Board for Advance Rulings (BAR) & Procedure",
+        "Ch 24 | Transfer Pricing – Arm's Length Price, Methods, Documentation, APA & Safe Harbour Rules",
+        "Ch 25 | Fundamentals of BEPS – OECD BEPS Action Plans, Pillars One & Two & India's Position",
+        "Ch 26 | Application and Interpretation of Tax Treaties – Treaty Override, MFN Clause, Limitation of Benefits & Beneficial Ownership",
+        "Ch 27 | Overview of Model Tax Conventions – OECD Model, UN Model & US Model – Key Articles & Differences",
+        "Ch 28 | Latest Developments in International Taxation – Multilateral Instrument (MLI), Pillar Two Rules & Emerging Issues",
+      ]},
     ]},
 
   // ── Paper 5: Indirect Tax Laws ──
   { id:"idt", name:"Indirect Tax Laws", short:"IDT", color:"#DC2626", light:"#fef2f2", text:"#b91c1c",
-    chapters:[
-      // ── GST Section I (45–65%) ──
-      "[GST Sec I | 45–65%] Concept of Supply – Inter-state, Intra-state & Territorial Waters",
-      "[GST Sec I | 45–65%] Charge of Tax, Reverse Charge & Composition Levy",
-      "[GST Sec I | 45–65%] Classification & Exemptions from GST",
-      "[GST Sec I | 45–65%] Place of Supply",
-      "[GST Sec I | 45–65%] Time of Supply",
-      "[GST Sec I | 45–65%] Value of Supply",
-      "[GST Sec I | 45–65%] Input Tax Credit – Eligibility, Conditions & Blocked Credits",
-      "[GST Sec I | 45–65%] Computation of GST Liability",
-      "[GST Sec I | 45–65%] GST Registration",
-      "[GST Sec I | 45–65%] Tax Invoice, Credit/Debit Notes & E-way Bill",
-      "[GST Sec I | 45–65%] Accounts, Records & Returns",
-      "[GST Sec I | 45–65%] Payment of Tax",
-      // ── GST Section II (10–30%) ──
-      "[GST Sec II | 10–30%] Refunds under GST",
-      "[GST Sec II | 10–30%] Job Work Provisions",
-      "[GST Sec II | 10–30%] Liability to Pay in Certain Cases",
-      "[GST Sec II | 10–30%] GST Administration, Assessment & Audit",
-      // ── GST Section III (0–5%) ──
-      "[GST Sec III | 0–5%] Inspection, Search, Seizure & Arrest",
-      // ── GST Section IV (15–30%) ──
-      "[GST Sec IV | 15–30%] Demand & Recovery",
-      "[GST Sec IV | 15–30%] Offences & Penalties",
-      "[GST Sec IV | 15–30%] Advance Ruling under GST",
-      "[GST Sec IV | 15–30%] Appeals & Revision under GST",
-      "[GST Sec IV | 15–30%] Ethics under GST",
-      // ── Customs Section I (40–65%) ──
-      "[Customs Sec I | 40–65%] Levy of Customs Duties & Taxable Event",
-      "[Customs Sec I | 40–65%] Types of Customs Duties",
-      "[Customs Sec I | 40–65%] Classification & Valuation of Import/Export Goods",
-      // ── Customs Section II (20–45%) ──
-      "[Customs Sec II | 20–45%] Import & Export Procedures & Special Procedures",
-      "[Customs Sec II | 20–45%] Warehousing",
-      "[Customs Sec II | 20–45%] Refund under Customs",
-      // ── Customs Section III (10–20%) ──
-      "[Customs Sec III | 10–20%] Foreign Trade Policy – Overview & Export Promotion Schemes",
+    sets:[
+      { id:"m1", name:"Module 1 – GST", timeWindow:"Ch 1–6", chapters:[
+        "Ch 1 | Supply under GST – Meaning, Scope, Composite & Mixed Supply, Inter-state & Intra-state Supply",
+        "Ch 2 | Charge of GST – Levy, Reverse Charge Mechanism, Composition Levy & Taxable Person",
+        "Ch 3 | Place of Supply – Goods & Services, Inter-state vs Intra-state, Specific Rules & Special Cases",
+        "Ch 4 | Exemptions from GST – Exempt Supplies, Nil-rated, Absolute & Conditional Exemptions",
+        "Ch 5 | Time of Supply – Point of Taxation for Goods & Services, Reverse Charge & Vouchers",
+        "Ch 6 | Value of Supply – Transaction Value, Inclusions/Exclusions, Related Party & Special Cases",
+      ]},
+      { id:"m2", name:"Module 2 – GST", timeWindow:"Ch 7–13", chapters:[
+        "Ch 7 | Input Tax Credit – Eligibility, Conditions, Blocked Credits, ITC on Capital Goods & Reversal",
+        "Ch 8 | Registration – Persons Liable, Voluntary, Compulsory, Procedure, Amendment & Cancellation",
+        "Ch 9 | Tax Invoice, Credit and Debit Notes – Contents, Manner of Issue, E-invoicing & Relevant Rules",
+        "Ch 10 | Accounts and Records; E-way Bill – Maintenance, Retention, Audit Trail & E-way Bill Provisions",
+        "Ch 11 | Payment of Tax – Liability, Electronic Ledgers, Order of Utilisation & TDS/TCS under GST",
+        "Ch 12 | Electronic Commerce Transactions – ECO Obligations, TCS, Deemed Supply & Special Provisions",
+        "Ch 13 | Returns – Types of Returns, GSTR-1/3B, Annual Return, Reconciliation Statement & Late Fees",
+      ]},
+      { id:"m3", name:"Module 3 – GST", timeWindow:"Ch 14–24", chapters:[
+        "Ch 14 | Import and Export under GST – IGST on Imports, Zero-rated Supplies & Special Economic Zones",
+        "Ch 15 | Refunds – Grounds, Procedure, Relevant Dates, Unjust Enrichment & Refund in Special Cases",
+        "Ch 16 | Job Work – Concept, Conditions, Procedure, Time Limits & Treatment of Inputs/Capital Goods",
+        "Ch 17 | Assessment and Audit – Self-Assessment, Scrutiny, Best Judgement, GST Audit & Special Audit",
+        "Ch 18 | Inspection, Search, Seizure and Arrest – Powers, Procedure & Safeguards",
+        "Ch 19 | Demands and Recovery – Show Cause Notice, Adjudication, Recovery Provisions & Modes",
+        "Ch 20 | Liability to Pay Tax in Certain Cases – Transfers, Amalgamations, Agents & Other Specific Cases",
+        "Ch 21 | Offences and Penalties and Ethical Aspects under GST – Offences, Penalties, Prosecution & Ethics",
+        "Ch 22 | Appeals and Revision – Appellate Authority, AAAR, Tribunal, High Court & Supreme Court",
+        "Ch 23 | Advance Ruling – Authority, Application, Procedure, Binding Nature & Applicability",
+        "Ch 24 | Miscellaneous Provisions – Anti-profiteering, GST Council, GSTN, Transitional & Other Provisions",
+      ]},
+      { id:"m4", name:"Module 4 – Customs & FTP", timeWindow:"Ch 1–8", chapters:[
+        "Ch 1 | Levy of and Exemptions from Customs Duty – Taxable Event, Charging Section & Exemption Notifications",
+        "Ch 2 | Types of Duty – BCD, IGST, SWS, Anti-dumping, Safeguard, CVD & Other Duties",
+        "Ch 3 | Classification of Imported and Export Goods – Customs Tariff, HSN, Rules of Interpretation & CTH",
+        "Ch 4 | Valuation under the Customs Act, 1962 – Transaction Value, Sequential Methods & Special Cases",
+        "Ch 5 | Importation and Exportation of Goods – Procedures, Bill of Entry, Shipping Bill & Special Procedures",
+        "Ch 6 | Warehousing – Types, Bonding, Conditions, Period, Removal & Provisions",
+        "Ch 7 | Refund – Excess Duty Paid, Baggage, Drawback & Unjust Enrichment under Customs",
+        "Ch 8 | Foreign Trade Policy – Overview, Export Promotion Schemes, MEIS/SEIS, SEZ & Key Provisions",
+      ]},
     ]},
 
   // ── Paper 6: SPOM ──
   { id:"spom", name:"SPOM Set-A & Set-B", short:"SPOM", color:"#0891B2", light:"#ecfeff", text:"#0e7490",
     sets:[
-      {id:"set_a", name:"Law", timeWindow:"1–2 hrs",
+      // ── Set A: Law ──
+      { id:"co_law", name:"Set A – Company Law", timeWindow:"Ch 1–10",
         chapters:[
-          // ── Company Law (50 Marks) ──
-          // Section I (35–45%)
-          "[Co. Law Sec I | 35–45%] Appointment & Qualifications of Directors",
-          "[Co. Law Sec I | 35–45%] Appointment & Remuneration of Managerial Personnel",
-          "[Co. Law Sec I | 35–45%] Meetings of Board and its Powers",
-          // Section II (25–30%)
-          "[Co. Law Sec II | 25–30%] Inspection, Inquiry and Investigation",
-          "[Co. Law Sec II | 25–30%] Compromises, Arrangements and Amalgamations",
-          "[Co. Law Sec II | 25–30%] Prevention of Oppression and Mismanagement",
-          // Section III (30–35%)
-          "[Co. Law Sec III | 30–35%] Winding Up",
-          "[Co. Law Sec III | 30–35%] Miscellaneous Provisions",
-          "[Co. Law Sec III | 30–35%] Adjudication, Special Courts & NCLT",
-          // ── Securities Laws (20 Marks) ──
-          "[Sec Laws | 20 Marks] Overview of SEBI Act, 1992",
-          "[Sec Laws | 20 Marks] SEBI (LODR) Regulations, 2015",
-          "[Sec Laws | 20 Marks] SEBI (ICDR) Regulations, 2018",
-          "[Sec Laws | 20 Marks] SEBI (Takeover) Regulations, 2011",
-          "[Sec Laws | 20 Marks] SEBI (PIT) Regulations, 2015",
-          // ── Economic Laws (30 Marks) ──
-          // Section I (35–40%)
-          "[Eco. Laws Sec I | 35–40%] FEMA 1999 – Introduction, Definitions, Regulation & Penalties",
-          // Section II (20–30%)
-          "[Eco. Laws Sec II | 20–30%] FCRA 2010 – Definitions & Regulation of Foreign Contribution",
-          // Section III (35–40%)
-          "[Eco. Laws Sec III | 35–40%] IBC 2016 – Significant Concepts (up to Section 33)",
+          "Ch 1 | Appointment and Qualifications of Directors",
+          "Ch 2 | Appointment and Remuneration of Managerial Personnel",
+          "Ch 3 | Meetings of Board and its Powers",
+          "Ch 4 | Inspection, Inquiry and Investigation",
+          "Ch 5 | Compromises, Arrangements and Amalgamations",
+          "Ch 6 | Prevention of Oppression and Mismanagement",
+          "Ch 7 | Winding Up",
+          "Ch 8 | Miscellaneous Provisions",
+          "Ch 9 | Adjudication, Special Courts, NCLT and Appellate Tribunal",
+          "Ch 10 | e-Filing",
         ]},
-      {id:"set_b", name:"SCPM", timeWindow:"1–2 hrs",
+      { id:"sec_laws", name:"Set A – Securities Laws", timeWindow:"Ch 1",
         chapters:[
-          // ── Part A: Strategic Cost Management (50%) ──
-          "[Part A – Ch 1] Intro to Strategic Cost Management – Traditional vs Strategic",
-          "[Part A – Ch 1] Organisational Context – Value Proposition, Business Model Canvas",
-          "[Part A – Ch 2] Modern Business Environment – Cost of Quality & TQM",
-          "[Part A – Ch 2] Supply Chain Management, Gain Sharing, Outsourcing & Offshoring",
-          "[Part A – Ch 3] Lean System – JIT, Kaizen Costing, 5S & TPM",
-          "[Part A – Ch 3] Cellular Manufacturing, Six Sigma & Process Innovation",
-          "[Part A – Ch 4] Cost Control/Reduction, Target Costing & Throughput Accounting",
-          "[Part A – Ch 4] Life Cycle Costing & Environmental Management Accounting",
-          "[Part A – Ch 5] Emerging Business Models – Digital, Hyper-disruptive & Sustainability",
-          "[Part A – Ch 6] Strategic Revenue Management – CVP Analysis & Relevant Cost Concepts",
-          "[Part A – Ch 6] Pricing Decisions – Theory, New Products, Services & Emerging Models",
-          "[Part A – Ch 6] Pricing Strategies – Kano's Attributes, Sensitivity & Special Circumstances",
-          "[Part A – Ch 7] Strategic Profit Management – Operating Profit Analysis",
-          "[Part A – Ch 7] Activity Based Profitability, ABM, ABB & Pareto Analysis",
-          // ── Part B: Strategic Performance Management (50%) ──
-          "[Part B – Ch 1] Intro to Strategic Performance Management – Strategy & Value Chain",
-          "[Part B – Ch 1] Performance Issues in Complex Structures, Behavioural Aspects & Corporate Failure",
-          "[Part B – Ch 2] Strategic Performance Measures – CSFs, KPIs & Financial Measures",
-          "[Part B – Ch 2] Balanced Scorecard, Performance Pyramid, Building Block Model & TBL",
-          "[Part B – Ch 3] Strategic Performance Measures – Not-for-Profit, VFM & Adapted BSC",
-          "[Part B – Ch 4] Preparation of Performance Reports",
-          "[Part B – Ch 5] Divisional Transfer Pricing – Meaning, Purpose & Methods",
-          "[Part B – Ch 5] Behavioural Consequences of Divisional Structures & Int'l TP",
-          "[Part B – Ch 6] Standard Costing – Advanced Variances & Reconciliation of Profit",
-          "[Part B – Ch 6] Variance Investigation, Behavioural Aspects & Limitations",
+          "Ch 1 | SEBI Act 1992 – SEBI (LODR) Regulations 2015, SEBI (ICDR) Regulations 2018, SEBI (Takeover) Regulations 2011 & SEBI (PIT) Regulations 2015",
+        ]},
+      { id:"eco_laws", name:"Set A – Economic Laws", timeWindow:"Ch 1–3",
+        chapters:[
+          "Ch 1 | The Foreign Exchange Management Act, 1999",
+          "Ch 2 | The Foreign Contribution Regulation Act, 2010",
+          "Ch 3 | The Insolvency and Bankruptcy Code, 2016",
+        ]},
+      // ── Set B: SCPM ──
+      { id:"scpm_a", name:"Set B – Strategic Cost Management", timeWindow:"Ch 1–7",
+        chapters:[
+          "Ch 1 | Introduction to Strategic Cost Management",
+          "Ch 2 | Modern Business Environment",
+          "Ch 3 | Lean System and Innovation",
+          "Ch 4 | Specialist Cost Management Techniques",
+          "Ch 5 | Management of Cost Strategically for Emerging Business Models",
+          "Ch 6 | Strategic Revenue Management",
+          "Ch 7 | Strategic Profit Management",
+        ]},
+      { id:"scpm_b", name:"Set B – Strategic Performance Management", timeWindow:"Ch 8–14",
+        chapters:[
+          "Ch 8 | An Introduction to Strategic Performance Management",
+          "Ch 9 | Strategic Performance Measures in Private Sector",
+          "Ch 10 | Strategic Performance Measures in The Non-For-Profit Organisations",
+          "Ch 11 | Preparation of Performance Reports",
+          "Ch 12 | Divisional Transfer Pricing",
+          "Ch 13 | Standard Costing",
+          "Ch 14 | Case Study",
         ]},
     ]},
 ];
@@ -724,6 +730,44 @@ function TrackerApp({ user, onLogout }) {
   const [reorderMode, setReorderMode] = useState(false);
   const [logoutConfirm, setLogoutConfirm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [dashTab, setDashTab] = useState("subjects"); // "subjects" | "links"
+  const [examDate, setExamDate] = useState(() => {
+    try { return localStorage.getItem('cafinal_examdate') || "2026-11-01"; } catch(e) { return "2026-11-01"; }
+  });
+  const [showExamPicker, setShowExamPicker] = useState(false);
+
+  // ── Streak logic ──
+  const todayStr = () => new Date().toISOString().slice(0,10);
+  const [streak, setStreak] = useState(() => {
+    try {
+      const s = JSON.parse(localStorage.getItem(`cafinal_streak:${user.username}`) || "{}");
+      return { current: s.current||0, longest: s.longest||0, lastDate: s.lastDate||"", activeDays: s.activeDays||[] };
+    } catch(e) { return { current:0, longest:0, lastDate:"", activeDays:[] }; }
+  });
+
+  const recordActivity = useCallback(() => {
+    const today = todayStr();
+    setStreak(prev => {
+      if (prev.lastDate === today) return prev; // already recorded today
+      const yesterday = new Date(); yesterday.setDate(yesterday.getDate()-1);
+      const yStr = yesterday.toISOString().slice(0,10);
+      const newCurrent = prev.lastDate === yStr ? prev.current + 1 : 1;
+      const newLongest = Math.max(newCurrent, prev.longest);
+      const activeDays = [...new Set([...prev.activeDays, today])].slice(-90); // keep last 90 days
+      const next = { current:newCurrent, longest:newLongest, lastDate:today, activeDays };
+      try { localStorage.setItem(`cafinal_streak:${user.username}`, JSON.stringify(next)); } catch(e){}
+      return next;
+    });
+  }, [user.username]);
+
+  const selectedExam = EXAM_OPTIONS.find(o => o.date === examDate) || EXAM_OPTIONS[0];
+  const getDays = () => getDaysTo(examDate);
+
+  const changeExamDate = (dateStr) => {
+    setExamDate(dateStr);
+    try { localStorage.setItem('cafinal_examdate', dateStr); } catch(e) {}
+    setShowExamPicker(false);
+  };
 
   const TRACKER_KEY = `tracker:${user.username}`;
 
@@ -741,7 +785,7 @@ function TrackerApp({ user, onLogout }) {
     });
   }, [st]);
 
-  const mut = useCallback(fn => setSt(prev => fn(prev)), []);
+  const mut = useCallback(fn => { setSt(prev => fn(prev)); recordActivity(); }, [recordActivity]);
 
   if (!st) return (
     <div style={{display:"flex",alignItems:"center",justifyContent:"center",
@@ -754,7 +798,22 @@ function TrackerApp({ user, onLogout }) {
 
   const getTopic = id => st.topicData[id] || {status:"pending",priority:"medium",note:""};
   const setTopic = (id, patch) => mut(p => ({...p, topicData:{...p.topicData,[id]:{...getTopic(id),...patch}}}));
-  const getOrder = sKey => st.chapterOrder[sKey] || [];
+  const getOrder = sKey => {
+    if (st.chapterOrder[sKey] && st.chapterOrder[sKey].length > 0) return st.chapterOrder[sKey];
+    // Key missing from saved data — seed from buildInit (handles schema changes)
+    const init = buildInit();
+    if (init.chapterOrder[sKey] && init.chapterOrder[sKey].length > 0) {
+      // Merge seed into state so it persists
+      mut(p => {
+        const merged = {...p};
+        merged.chapterOrder = {...p.chapterOrder, [sKey]: init.chapterOrder[sKey]};
+        merged.chapterNames = {...p.chapterNames, ...init.chapterNames};
+        return merged;
+      });
+      return init.chapterOrder[sKey];
+    }
+    return [];
+  };
 
   const addChapter = sKey => {
     const name = (addInputs[sKey]||"").trim(); if (!name) return;
@@ -860,7 +919,35 @@ function TrackerApp({ user, onLogout }) {
             <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.2rem",fontWeight:700,
               color:T.primary,letterSpacing:"-0.3px",lineHeight:1.25}}>
               CA Final Study Tracker<br/>
-              <span style={{fontSize:"0.92rem",fontWeight:600,color:T.secondary}}>for Nov'26 Students</span>
+              <div style={{position:"relative",display:"inline-block"}}>
+                <button onClick={()=>setShowExamPicker(v=>!v)}
+                  style={{background:"none",border:"none",padding:0,cursor:"pointer",
+                    fontFamily:"'Playfair Display',serif",fontSize:"0.92rem",fontWeight:600,
+                    color:"#b45309",letterSpacing:"-0.3px",display:"inline-flex",alignItems:"center",gap:4}}>
+                  for {selectedExam.label} Students
+                  <span style={{fontSize:"0.6rem",color:T.muted,fontWeight:400,marginTop:1}}>▾</span>
+                </button>
+                {showExamPicker&&(
+                  <div style={{position:"absolute",left:0,top:"calc(100% + 6px)",
+                    background:T.card,border:`1.5px solid ${T.border}`,borderRadius:12,
+                    padding:"6px 4px",zIndex:999,
+                    boxShadow:`0 8px 32px ${dm?"rgba(0,0,0,0.6)":"rgba(0,0,0,0.14)"}`,minWidth:180}}>
+                    <div style={{fontSize:"0.56rem",fontWeight:700,color:T.muted,letterSpacing:"0.12em",
+                      textTransform:"uppercase",padding:"4px 10px 6px"}}>Select Exam Attempt</div>
+                    {EXAM_OPTIONS.map(opt=>(
+                      <button key={opt.date} onClick={()=>changeExamDate(opt.date)}
+                        style={{display:"block",width:"100%",textAlign:"left",
+                          background:opt.date===examDate?(dm?"rgba(180,83,9,0.18)":"#fffbeb"):"none",
+                          border:"none",borderRadius:8,padding:"7px 12px",cursor:"pointer",
+                          color:opt.date===examDate?"#b45309":T.secondary,
+                          fontSize:"0.74rem",fontWeight:opt.date===examDate?700:400,
+                          transition:"all 0.12s",fontFamily:"'DM Sans',sans-serif"}}>
+                        {opt.date===examDate?"✓ ":""}{opt.display}
+                      </button>
+                    ))}
+                  </div>
+                )}
+              </div>
             </div>
             <div style={{color:T.muted,fontSize:"0.67rem",marginTop:3,fontWeight:400}}>
               Prepared by <span style={{color:"#b45309",fontWeight:600}}>CA Avishi Gupta</span>
@@ -900,16 +987,19 @@ function TrackerApp({ user, onLogout }) {
         {/* Hero card — always dark, unchanged */}
         <div style={{background:"linear-gradient(135deg,#1c1917 0%,#2d2522 55%,#1c1917 100%)",
           borderRadius:18,padding:"20px 22px",marginBottom:14,
-          position:"relative",overflow:"hidden"}}>
-          <div style={{position:"absolute",top:-50,right:-50,width:180,height:180,
-            background:"radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 70%)",borderRadius:"50%"}}/>
+          position:"relative",overflow:"visible"}}>
+          {/* Decorative circle clipped in its own wrapper */}
+          <div style={{position:"absolute",top:0,right:0,width:130,height:130,borderRadius:18,overflow:"hidden",pointerEvents:"none"}}>
+            <div style={{position:"absolute",top:-50,right:-50,width:180,height:180,
+              background:"radial-gradient(circle,rgba(255,255,255,0.05) 0%,transparent 70%)",borderRadius:"50%"}}/>
+          </div>
           <div style={{marginBottom:14,paddingBottom:14,borderBottom:"1px solid rgba(255,255,255,0.07)"}}>
             <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",fontWeight:700,
               color:"#fafaf9",lineHeight:1.3}}>
               Hi {user.name},
             </div>
             <div style={{color:"#a8a29e",fontSize:"0.74rem",marginTop:3,lineHeight:1.5}}>
-              Welcome back to your Study Tracker. Days left for your exams:{" "}
+              Welcome back to your Study Tracker. Days left for <span style={{color:"#d4a853",fontWeight:600}}>{selectedExam.label} Exams</span>:{" "}
               <span style={{color:"#d4a853",fontWeight:700,fontSize:"0.85rem"}}>{getDays()}</span>.
               {getDays()>60?" You've got plenty of time — stay consistent! 💪"
                :getDays()>30?" The final stretch is here — push hard! 🔥"
@@ -922,11 +1012,50 @@ function TrackerApp({ user, onLogout }) {
                 textTransform:"uppercase",marginBottom:5}}>Days Remaining</div>
               <div style={{fontFamily:"'Playfair Display',serif",fontSize:"3rem",fontWeight:800,
                 lineHeight:1,color:"#fafaf9",letterSpacing:"-2px"}}>{getDays()}</div>
-              <div style={{color:"#57534e",fontSize:"0.65rem",marginTop:5}}>1 November 2026</div>
+              <div style={{position:"relative",display:"inline-block"}}>
+              <button onClick={()=>setShowExamPicker(v=>!v)}
+                style={{background:"none",border:"1px solid rgba(255,255,255,0.18)",borderRadius:8,
+                  padding:"3px 9px",marginTop:6,cursor:"pointer",display:"flex",alignItems:"center",gap:5,
+                  color:"#a8a29e",fontSize:"0.62rem",fontWeight:500,transition:"all 0.15s"}}>
+                📅 {selectedExam.display} <span style={{fontSize:"0.55rem",opacity:0.7}}>▾</span>
+              </button>
+              {showExamPicker&&(
+                <div style={{position:"absolute",left:0,top:"calc(100% + 6px)",background:"#1c1917",
+                  border:"1.5px solid rgba(255,255,255,0.15)",borderRadius:12,padding:"6px 4px",
+                  zIndex:999,boxShadow:"0 8px 32px rgba(0,0,0,0.6)",minWidth:180}}>
+                  <div style={{fontSize:"0.56rem",fontWeight:700,color:"#78716c",letterSpacing:"0.12em",
+                    textTransform:"uppercase",padding:"4px 10px 6px"}}>Select Exam Attempt</div>
+                  {EXAM_OPTIONS.map(opt=>(
+                    <button key={opt.date} onClick={()=>changeExamDate(opt.date)}
+                      style={{display:"block",width:"100%",textAlign:"left",background:opt.date===examDate?"rgba(212,168,83,0.18)":"none",
+                        border:"none",borderRadius:8,padding:"7px 12px",cursor:"pointer",
+                        color:opt.date===examDate?"#d4a853":"#c4bdb7",fontSize:"0.74rem",fontWeight:opt.date===examDate?700:400,
+                        transition:"all 0.12s"}}>
+                      {opt.date===examDate?"✓ ":""}{opt.display}
+                    </button>
+                  ))}
+                </div>
+              )}
+              </div>
             </div>
-            <div style={{textAlign:"center"}}>
-              <Ring pct={overall.pct} color="#d4a853" track="rgba(255,255,255,0.1)" size={72}/>
-              <div style={{color:"#57534e",fontSize:"0.63rem",marginTop:5}}>{overall.done}/{overall.total} done</div>
+            <div style={{display:"flex",flexDirection:"column",alignItems:"center",gap:10}}>
+              {/* Streak flame */}
+              <div style={{textAlign:"center",background:"rgba(255,255,255,0.05)",
+                border:"1px solid rgba(255,255,255,0.1)",borderRadius:14,padding:"10px 18px"}}>
+                <div style={{fontSize:"1.6rem",lineHeight:1}}>{streak.current>0?"🔥":"❄️"}</div>
+                <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.5rem",fontWeight:800,
+                  color:streak.current>0?"#f97316":"#94a3b8",lineHeight:1.1,marginTop:2}}>{streak.current}</div>
+                <div style={{fontSize:"0.52rem",color:"#78716c",fontWeight:600,letterSpacing:"0.1em",
+                  textTransform:"uppercase",marginTop:2}}>Day Streak</div>
+                {streak.longest>0&&<div style={{fontSize:"0.55rem",color:"#57534e",marginTop:3}}>
+                  Best: {streak.longest} {streak.longest===1?"day":"days"}
+                </div>}
+              </div>
+              {/* Ring */}
+              <div style={{textAlign:"center"}}>
+                <Ring pct={overall.pct} color="#d4a853" track="rgba(255,255,255,0.1)" size={60}/>
+                <div style={{color:"#57534e",fontSize:"0.6rem",marginTop:4}}>{overall.done}/{overall.total} done</div>
+              </div>
             </div>
           </div>
         </div>
@@ -955,6 +1084,88 @@ function TrackerApp({ user, onLogout }) {
           </div>
         </div>
 
+        {/* Streak heatmap card */}
+        {(()=>{
+          const today = new Date(); today.setHours(0,0,0,0);
+          // build 84 days (12 weeks) ending today
+          const days = Array.from({length:84},(_,i)=>{
+            const d = new Date(today); d.setDate(d.getDate()-(83-i));
+            return d.toISOString().slice(0,10);
+          });
+          const activeSet = new Set(streak.activeDays);
+          const weeks = [];
+          for(let w=0;w<12;w++) weeks.push(days.slice(w*7,(w+1)*7));
+          const DAY_LABELS = ["S","M","T","W","T","F","S"];
+          return (
+          <div style={{background:T.card,borderRadius:14,padding:"13px 16px",marginBottom:14,
+            border:`1.5px solid ${T.border}`,
+            boxShadow:`0 1px 4px ${dm?"rgba(0,0,0,0.2)":"rgba(0,0,0,0.04)"}`,
+            transition:"background 0.25s,border-color 0.25s"}}>
+            <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
+              <div>
+                <span style={{fontSize:"0.7rem",fontWeight:600,color:T.primary}}>🔥 Study Streak</span>
+                <span style={{fontSize:"0.6rem",color:T.muted,marginLeft:6}}>Last 12 weeks</span>
+              </div>
+              <div style={{display:"flex",gap:12}}>
+                {[{label:"Current",val:streak.current,color:"#f97316"},{label:"Longest",val:streak.longest,color:"#d4a853"}].map(({label,val,color})=>(
+                  <div key={label} style={{textAlign:"center"}}>
+                    <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1rem",fontWeight:700,color}}>{val}</div>
+                    <div style={{fontSize:"0.55rem",color:T.muted}}>{label}</div>
+                  </div>
+                ))}
+              </div>
+            </div>
+            {/* Heatmap grid */}
+            <div style={{display:"flex",gap:3}}>
+              {/* Day labels column */}
+              <div style={{display:"flex",flexDirection:"column",gap:2,paddingTop:16}}>
+                {DAY_LABELS.map((d,i)=>(
+                  <div key={i} style={{height:11,fontSize:"0.45rem",color:T.muted,lineHeight:"11px",
+                    width:10,textAlign:"right",fontWeight:500}}>{d}</div>
+                ))}
+              </div>
+              {/* Week columns */}
+              <div style={{flex:1,display:"flex",gap:2,overflowX:"auto"}}>
+                {weeks.map((week,wi)=>(
+                  <div key={wi} style={{display:"flex",flexDirection:"column",gap:2}}>
+                    {/* Month label for first day of month */}
+                    <div style={{height:14,fontSize:"0.42rem",color:T.muted,textAlign:"center",lineHeight:"14px"}}>
+                      {week.some(d=>d.endsWith("-01"))
+                        ? new Date(week.find(d=>d.endsWith("-01"))).toLocaleString("default",{month:"short"})
+                        : ""}
+                    </div>
+                    {week.map(dateStr=>{
+                      const isToday = dateStr===new Date().toISOString().slice(0,10);
+                      const active = activeSet.has(dateStr);
+                      const isFuture = dateStr > new Date().toISOString().slice(0,10);
+                      return (
+                        <div key={dateStr} title={dateStr}
+                          style={{width:11,height:11,borderRadius:2.5,
+                            background: isFuture
+                              ? "transparent"
+                              : active
+                                ? dm?"#f97316":"#ea580c"
+                                : dm?"rgba(255,255,255,0.07)":"#e7e5e4",
+                            border: isToday?`1.5px solid ${dm?"#f97316":"#b45309"}`:`1px solid ${isFuture?"transparent":dm?"rgba(255,255,255,0.05)":"rgba(0,0,0,0.06)"}`,
+                            transition:"background 0.2s",
+                          }}/>
+                      );
+                    })}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <div style={{display:"flex",alignItems:"center",gap:5,marginTop:8,justifyContent:"flex-end"}}>
+              <span style={{fontSize:"0.52rem",color:T.muted}}>Less</span>
+              {[dm?"rgba(255,255,255,0.07)":"#e7e5e4","#fdba74","#f97316","#ea580c","#c2410c"].map((c,i)=>(
+                <div key={i} style={{width:10,height:10,borderRadius:2,background:c,border:`1px solid ${dm?"rgba(255,255,255,0.08)":"rgba(0,0,0,0.06)"}`}}/>
+              ))}
+              <span style={{fontSize:"0.52rem",color:T.muted}}>More</span>
+            </div>
+          </div>
+          );
+        })()}
+
         {/* User card */}
         <div style={{background:T.card,borderRadius:12,padding:"10px 14px",marginBottom:14,
           border:`1.5px solid ${T.border}`,display:"flex",alignItems:"center",gap:10,
@@ -968,14 +1179,26 @@ function TrackerApp({ user, onLogout }) {
           <div style={{flex:1,minWidth:0}}>
             <div style={{fontSize:"0.78rem",fontWeight:600,color:T.primary,
               overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{user.name}</div>
-            <div style={{fontSize:"0.63rem",color:T.muted}}>@{user.username} · Nov '26 Candidate</div>
+            <div style={{fontSize:"0.63rem",color:T.muted}}>@{user.username} · {selectedExam.label} Candidate</div>
           </div>
           <div style={{fontSize:"0.63rem",color:"#10b981",fontWeight:500,
             background:"#ecfdf5",borderRadius:20,padding:"3px 9px",
             border:"1px solid #a7f3d0",flexShrink:0}}>● Synced</div>
         </div>
 
+        {/* Dashboard tabs */}
+        <div style={{display:"flex",borderRadius:12,overflow:"hidden",border:`1.5px solid ${T.border}`,marginBottom:14,transition:"border-color 0.25s"}}>
+          {[["subjects","📚 Subjects"],["links","🔗 Important Links"]].map(([key,label])=>(
+            <button key={key} onClick={()=>setDashTab(key)}
+              className={`tab-btn ${dashTab===key?"active":"inactive"}`}
+              style={{fontSize:"0.76rem",letterSpacing:"0.01em"}}>
+              {label}
+            </button>
+          ))}
+        </div>
+
         {/* Subject grid */}
+        {dashTab==="subjects"&&(
         <div style={{display:"grid",gridTemplateColumns:"1fr 1fr",gap:10}}>
           {SUBJECT_DEFS.map(s=>{
             const ids = s.sets
@@ -1003,6 +1226,66 @@ function TrackerApp({ user, onLogout }) {
             );
           })}
         </div>
+        )}
+
+        {/* Important Links */}
+        {dashTab==="links"&&(
+        <div style={{display:"flex",flexDirection:"column",gap:8}}>
+          {[
+            {
+              category:"📖 ICAI Resources",
+              links:[
+                {label:"BOS Portal",desc:"Board of Studies live portal",url:"https://boslive.icai.org/index.php",color:"#0e7490",light:"#ecfeff",border:"#0891B255"},
+                {label:"Study Material",desc:"ICAI Study Material (May 2026 onwards)",url:"https://boslive.icai.org/study_material_new_paper_details.php?c=final&language=English&year=Applicable%20for%20May%202026%20Exam%20Onwards",color:"#7C3AED",light:"#f5f3ff",border:"#7C3AED55"},
+                {label:"SPOM",desc:"Self-Paced Online Modules (NSET)",url:"https://www.icai.org/post/self-paced-online-modules-nset",color:"#059669",light:"#ecfdf5",border:"#05966955"},
+              ]
+            },
+            {
+              category:"📝 Practice Papers",
+              links:[
+                {label:"Revision Test Papers",desc:"RTP — New Scheme (Final)",url:"https://boslive.icai.org/education_content_rtp.php?c=Final",color:"#B45309",light:"#fffbeb",border:"#B4530955"},
+                {label:"Model Test Papers",desc:"MTP (Final)",url:"https://boslive.icai.org/education_content_modelTestPapers.php?c=Final",color:"#DC2626",light:"#fef2f2",border:"#DC262655"},
+                {label:"Mock Test Papers",desc:"Mock Test Papers (Final)",url:"https://boslive.icai.org/education_content.php?p=Mock%20Test%20Papers",color:"#2563EB",light:"#eff6ff",border:"#2563EB55"},
+              ]
+            },
+            {
+              category:"✅ Suggested Answers",
+              links:[
+                {label:"Suggested Answers",desc:"New Scheme — Official suggested answers",url:"https://www.icai.org/post/suggested-answer-final-course",color:"#047857",light:"#ecfdf5",border:"#04785755"},
+                {label:"Suggested Answers (Old Scheme)",desc:"Previous year suggested answers",url:"https://boslive.icai.org/education_content.php?p=Previous%20Year%20Suggested%20Answers&c=final",color:"#78716c",light:"#f5f5f4",border:"#78716c55"},
+              ]
+            },
+          ].map(({category,links})=>(
+            <div key={category}>
+              <div style={{fontSize:"0.62rem",fontWeight:700,color:T.muted,letterSpacing:"0.1em",
+                textTransform:"uppercase",marginBottom:6,paddingLeft:2}}>{category}</div>
+              <div style={{display:"flex",flexDirection:"column",gap:6}}>
+                {links.map(({label,desc,url,color,light,border})=>(
+                  <a key={label} href={url} target="_blank" rel="noopener noreferrer"
+                    style={{display:"flex",alignItems:"center",gap:12,
+                      background:T.card,border:`1.5px solid ${T.border}`,borderRadius:12,
+                      padding:"11px 14px",textDecoration:"none",
+                      boxShadow:`0 1px 3px ${dm?"rgba(0,0,0,0.2)":"rgba(0,0,0,0.04)"}`,
+                      transition:"all 0.18s ease"}}>
+                    <div style={{width:36,height:36,borderRadius:9,flexShrink:0,
+                      background:dm?color+"22":light,border:`1.5px solid ${border}`,
+                      display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1rem"}}>
+                      🔗
+                    </div>
+                    <div style={{flex:1,minWidth:0}}>
+                      <div style={{fontSize:"0.78rem",fontWeight:600,color:color,
+                        overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{label}</div>
+                      <div style={{fontSize:"0.63rem",color:T.muted,marginTop:1,
+                        overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>{desc}</div>
+                    </div>
+                    <span style={{color:T.muted,fontSize:"0.75rem",flexShrink:0}}>↗</span>
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+        )}
       </div>
 
       {editingName&&<EditNameModal/>}
