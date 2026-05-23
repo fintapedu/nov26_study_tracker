@@ -117,6 +117,123 @@
     white-space:nowrap;
   }
   .dm-toggle:hover{border-color:var(--text-muted)}
+
+  /* ── Tutorial Overlay ── */
+  @keyframes tutSlideUp{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes tutPop{from{opacity:0;transform:scale(0.88)}to{opacity:1;transform:scale(1)}}
+  @keyframes stepDot{0%,100%{transform:scale(1)}50%{transform:scale(1.35)}}
+
+  .tut-overlay{
+    position:fixed;inset:0;z-index:9999;
+    background:rgba(10,9,8,0.72);
+    backdrop-filter:blur(8px);
+    display:flex;align-items:flex-end;justify-content:center;
+    padding:0 0 env(safe-area-inset-bottom,0);
+  }
+  .tut-card{
+    background:var(--bg-card);
+    border:1.5px solid var(--border-main);
+    border-radius:24px 24px 0 0;
+    padding:28px 24px 32px;
+    width:100%;max-width:480px;
+    box-shadow:0 -12px 48px rgba(0,0,0,0.28);
+    animation:tutSlideUp 0.32s cubic-bezier(.22,1,.36,1) both;
+    position:relative;overflow:hidden;
+  }
+  .tut-icon-wrap{
+    width:64px;height:64px;border-radius:18px;
+    display:flex;align-items:center;justify-content:center;
+    font-size:2rem;margin:0 auto 16px;
+    animation:tutPop 0.28s cubic-bezier(.22,1,.36,1) 0.08s both;
+  }
+  .tut-step-dots{
+    display:flex;gap:6px;justify-content:center;margin-bottom:20px;
+  }
+  .tut-dot{
+    width:6px;height:6px;border-radius:50%;
+    background:var(--border-main);transition:all 0.2s ease;
+  }
+  .tut-dot.active{
+    width:18px;border-radius:3px;
+    background:#b45309;animation:stepDot 0.3s ease;
+  }
+  .tut-help-btn{
+    display:flex;align-items:center;justify-content:center;
+    width:28px;height:28px;border-radius:50%;
+    border:1.5px solid var(--border-btn);
+    background:var(--bg-btn);color:var(--text-secondary);
+    font-size:0.75rem;font-weight:700;cursor:pointer;
+    transition:all 0.18s ease;flex-shrink:0;
+  }
+  .tut-help-btn:hover{border-color:#b45309;color:#b45309}
+
+  /* ── Subscription / Plan System ── */
+  @keyframes planSlideUp{from{opacity:0;transform:translateY(30px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes payPulse{0%,100%{box-shadow:0 0 0 0 rgba(180,83,9,0.35)}50%{box-shadow:0 0 0 10px rgba(180,83,9,0)}}
+  @keyframes checkPop{0%{transform:scale(0)}60%{transform:scale(1.25)}100%{transform:scale(1)}}
+  @keyframes shimmer{0%{background-position:-200% 0}100%{background-position:200% 0}}
+
+  .plan-overlay{
+    position:fixed;inset:0;z-index:10000;
+    background:rgba(10,9,8,0.78);
+    backdrop-filter:blur(10px);
+    display:flex;align-items:flex-end;justify-content:center;
+  }
+  .plan-sheet{
+    background:var(--bg-card);
+    border:1.5px solid var(--border-main);
+    border-radius:28px 28px 0 0;
+    width:100%;max-width:520px;
+    max-height:92vh;overflow-y:auto;
+    box-shadow:0 -20px 60px rgba(0,0,0,0.35);
+    animation:planSlideUp 0.38s cubic-bezier(.22,1,.36,1) both;
+    padding:0 0 env(safe-area-inset-bottom,16px);
+  }
+  .plan-card-item{
+    border-radius:16px;padding:16px;
+    border:2px solid var(--border-main);
+    transition:all 0.2s ease;cursor:pointer;
+    position:relative;overflow:hidden;
+  }
+  .plan-card-item.popular{border-color:#7c3aed;}
+  .plan-card-item.active-plan{border-color:#047857;}
+  .plan-feature-row{
+    display:flex;align-items:flex-start;gap:8px;
+    font-size:0.75rem;line-height:1.5;margin-bottom:4px;
+    color:var(--text-secondary);
+  }
+  .plan-feature-row.locked{color:var(--text-muted);opacity:0.6;}
+  .plan-cta-btn{
+    width:100%;padding:13px;border-radius:12px;border:none;
+    font-family:'DM Sans',sans-serif;font-size:0.88rem;font-weight:700;
+    cursor:pointer;transition:all 0.18s ease;
+    display:flex;align-items:center;justify-content:center;gap:8px;
+  }
+  .locked-badge{
+    display:inline-flex;align-items:center;gap:4px;
+    border-radius:20px;padding:3px 10px;font-size:0.66rem;
+    cursor:pointer;transition:all 0.15s;border-width:1px;border-style:solid;
+    font-weight:600;
+  }
+  .locked-section{
+    border-radius:14px;padding:20px;text-align:center;
+    border:2px dashed var(--border-dashed);
+    background:var(--bg-card2);margin-bottom:14px;
+    cursor:pointer;transition:all 0.2s;
+  }
+  .locked-section:hover{border-color:#b45309;background:var(--bg-input);}
+  .plan-pill{
+    display:inline-flex;align-items:center;gap:4px;
+    border-radius:20px;padding:3px 10px;
+    font-size:0.65rem;font-weight:700;cursor:pointer;
+    transition:all 0.15s;border:1.5px solid;
+    white-space:nowrap;
+  }
+  .shimmer-bg{
+    background:linear-gradient(90deg,transparent 0%,rgba(255,255,255,0.08) 50%,transparent 100%);
+    background-size:200% 100%;
+    animation:shimmer 1.8s infinite;
+  }
 </style>
 </head>
 <body>
@@ -387,6 +504,55 @@ const SUBJECT_DEFS = [
           "Ch 14 | Case Study",
         ]},
     ]},
+
+  // ── Paper 6C: Integrated Business Solutions ──
+  { id:"ibs", name:"Integrated Business Solutions", short:"IBS", color:"#7C2D12", light:"#fff7ed", text:"#9a3412",
+    resourceLink:{ label:"ICAI – IBS Study Material & Guidelines", url:"https://www.icai.org/post/19442" },
+    sets:[
+      { id:"unit1", name:"Unit 1 – Financial Reporting & Analysis", timeWindow:"FR Integration", chapters:[
+        "Case Integration | Application of Ind AS in complex business scenarios",
+        "Case Integration | Consolidation, Business Combinations & Group Reporting",
+        "Case Integration | Financial Instruments – Classification, Measurement & Disclosures",
+        "Case Integration | Revenue Recognition (Ind AS 115) in multi-element arrangements",
+        "Case Integration | Leases (Ind AS 116) – Lessee & Lessor accounting",
+        "Case Integration | Analysis of Financial Statements – Ratio Analysis & Interpretation",
+      ]},
+      { id:"unit2", name:"Unit 2 – Strategic Financial Management", timeWindow:"AFM Integration", chapters:[
+        "Case Integration | Capital Budgeting under uncertainty & real options",
+        "Case Integration | Business Valuation – DCF, Relative Valuation & EVA",
+        "Case Integration | M&A – Synergy valuation, financing & restructuring",
+        "Case Integration | Risk Management – Hedging strategies using derivatives",
+        "Case Integration | Portfolio Management & Asset Allocation decisions",
+        "Case Integration | International Finance – Cross-border investments & exposure",
+      ]},
+      { id:"unit3", name:"Unit 3 – Advanced Auditing", timeWindow:"AAA Integration", chapters:[
+        "Case Integration | Audit Planning, Risk Assessment & Materiality",
+        "Case Integration | Internal Controls – Design, evaluation & reporting gaps",
+        "Case Integration | Forensic Accounting, Due Diligence & Investigation",
+        "Case Integration | Ethical dilemmas & Professional scepticism",
+        "Case Integration | Auditor's Report – Modifications, KAM & EOM",
+      ]},
+      { id:"unit4", name:"Unit 4 – Direct & Indirect Tax", timeWindow:"DT + IDT Integration", chapters:[
+        "Case Integration | Tax Planning for corporate restructuring & M&A",
+        "Case Integration | Transfer Pricing – Documentation & compliance",
+        "Case Integration | GST – Complex supply chains, ITC reversal & reconciliation",
+        "Case Integration | Customs & FTP – Export incentives & SEZ provisions",
+        "Case Integration | International Taxation – DTAA application & BEPS impact",
+      ]},
+      { id:"unit5", name:"Unit 5 – Corporate & Economic Laws", timeWindow:"Law Integration", chapters:[
+        "Case Integration | NCLT proceedings – Mergers, Oppression & Winding Up",
+        "Case Integration | SEBI Regulations – Takeover, Insider Trading & LODR",
+        "Case Integration | IBC – Resolution process, liquidation & claims",
+        "Case Integration | FEMA – Overseas investments & ECB regulations",
+      ]},
+      { id:"unit6", name:"Unit 6 – Strategic Cost & Performance Mgmt", timeWindow:"SCPM Integration", chapters:[
+        "Case Integration | Strategic cost analysis for new business models",
+        "Case Integration | Balanced Scorecard & KPI design for organisations",
+        "Case Integration | Transfer pricing in divisional structures",
+        "Case Integration | Standard costing & variance analysis in practice",
+        "Case Integration | Lean systems & value-chain cost management",
+      ]},
+    ]},
 ];
 
 // ──────────────────────────────────────────────────────────
@@ -475,6 +641,105 @@ const RTOGGLE=[
 
 const {useState,useEffect,useCallback,useRef,useContext}=React;
 
+// ──────────────────────────────────────────────────────────
+// SUBSCRIPTION PLAN SYSTEM
+// ──────────────────────────────────────────────────────────
+const PLANS = [
+  {
+    id:"free", name:"Free", price:0, emoji:"📖",
+    color:"#6b7280", light:"#f9fafb", border:"#e5e7eb",
+    tagline:"Get started with the basics",
+    features:[
+      { label:"Chapter status tracking (Pending/In Progress/Done)", included:true },
+      { label:"Progress rings & bars for all 6 papers", included:true },
+      { label:"Exam countdown timer", included:true },
+      { label:"Quote of the day & motivational content", included:true },
+      { label:"Dark mode & Tutorial guide", included:true },
+      { label:"Status-based filter", included:true },
+      { label:"Revision Notes per chapter 📝", included:false, needsPlan:"pro" },
+      { label:"Class Attendance tracking 🎓", included:false, needsPlan:"pro" },
+      { label:"Study Streak tracker 🔥", included:false, needsPlan:"pro" },
+      { label:"Priority flags & filters 🚦", included:false, needsPlan:"elite" },
+      { label:"12-week Study Heatmap 📅", included:false, needsPlan:"elite" },
+      { label:"R1/R2/R3 Revision Round tracking 🔄", included:false, needsPlan:"elite" },
+      { label:"Add/Reorder/Delete custom chapters ⇅", included:false, needsPlan:"supreme" },
+      { label:"Important Links tab 🔗", included:false, needsPlan:"supreme" },
+      { label:"Export & Print progress report 📊", included:false, needsPlan:"supreme" },
+    ],
+    newFeatures:["Chapter status tracking","Progress rings & bars","Exam countdown","Dark mode & Tutorial"],
+  },
+  {
+    id:"pro", name:"Pro", price:99, emoji:"⚡",
+    color:"#2563eb", light:"#eff6ff", border:"#bfdbfe",
+    tagline:"Track smarter, study better",
+    badge:null,
+    features:[
+      { label:"Everything in Free", included:true, isMeta:true },
+      { label:"Revision Notes per chapter 📝", included:true },
+      { label:"Class Attendance tracking 🎓", included:true },
+      { label:"Study Streak tracker 🔥", included:true },
+      { label:"Priority flags & filters 🚦", included:false, needsPlan:"elite" },
+      { label:"12-week Study Heatmap 📅", included:false, needsPlan:"elite" },
+      { label:"R1/R2/R3 Revision Round tracking 🔄", included:false, needsPlan:"elite" },
+      { label:"Add/Reorder/Delete custom chapters ⇅", included:false, needsPlan:"supreme" },
+      { label:"Important Links tab 🔗", included:false, needsPlan:"supreme" },
+      { label:"Export & Print progress report 📊", included:false, needsPlan:"supreme" },
+    ],
+    newFeatures:["Revision Notes 📝","Class Attendance 🎓","Study Streak 🔥"],
+  },
+  {
+    id:"elite", name:"Elite", price:199, emoji:"🏆",
+    color:"#7c3aed", light:"#f5f3ff", border:"#ddd6fe",
+    tagline:"Deep analytics for serious revision",
+    badge:"Most Popular",
+    features:[
+      { label:"Everything in Pro", included:true, isMeta:true },
+      { label:"Priority flags (🔴 High / 🟡 Med / 🔵 Low)", included:true },
+      { label:"Advanced filters (Priority & Class)", included:true },
+      { label:"12-week Study Heatmap 📅", included:true },
+      { label:"R1/R2/R3 Revision Round tracking 🔄", included:true },
+      { label:"Add/Reorder/Delete custom chapters ⇅", included:false, needsPlan:"supreme" },
+      { label:"Important Links tab 🔗", included:false, needsPlan:"supreme" },
+      { label:"Export & Print progress report 📊", included:false, needsPlan:"supreme" },
+    ],
+    newFeatures:["Priority flags & filters 🚦","Study Heatmap 📅","R1/R2/R3 Rounds 🔄"],
+  },
+  {
+    id:"supreme", name:"Supreme", price:299, emoji:"👑",
+    color:"#b45309", light:"#fffbeb", border:"#fde68a",
+    tagline:"The complete CA Final toolkit",
+    badge:"Best Value",
+    features:[
+      { label:"Everything in Elite", included:true, isMeta:true },
+      { label:"Add, Reorder & Delete custom chapters ⇅", included:true },
+      { label:"Important Links tab (ICAI BOS, RTP, MTP…) 🔗", included:true },
+      { label:"Export & Print progress report 📊", included:true },
+    ],
+    newFeatures:["Add/Reorder chapters ⇅","Important Links 🔗","Export & Print 📊"],
+  },
+];
+
+const PLAN_LEVEL = { free:0, pro:1, elite:2, supreme:3 };
+
+// feature → minimum plan required
+const FEATURE_PLAN = {
+  notes:"pro", classAttend:"pro", streak:"pro",
+  priority:"elite", heatmap:"elite", revisions:"elite", advFilters:"elite",
+  reorder:"supreme", links:"supreme", exportPrint:"supreme",
+};
+
+function planHas(userPlan, feature) {
+  const required = FEATURE_PLAN[feature];
+  if (!required) return true; // not a gated feature
+  return (PLAN_LEVEL[userPlan||"free"] || 0) >= PLAN_LEVEL[required];
+}
+
+const PlanContext = React.createContext({
+  plan:"free", openUpgrade:()=>{}, activatePlan:()=>{}
+});
+const usePlan = () => React.useContext(PlanContext);
+
+
 // ── Progress Bar ──
 const ProgBar=({pct,color,h=5})=>{
   const {darkMode:dm}=useContext(ThemeContext);
@@ -514,6 +779,197 @@ const DarkToggle = () => {
     </button>
   );
 };
+
+// ──────────────────────────────────────────────────────────
+// TUTORIAL OVERLAY
+// ──────────────────────────────────────────────────────────
+const TUTORIAL_STEPS = [
+  {
+    icon:"📚", iconBg:"linear-gradient(135deg,#1c1917,#2d2522)", iconColor:"#d4a853",
+    title:"Welcome to CA Final Tracker!",
+    desc:"This quick guide will walk you through all the key features. You can revisit it anytime by tapping the ❓ button in the header.",
+    tip:null,
+  },
+  {
+    icon:"📅", iconBg:"linear-gradient(135deg,#eff6ff,#dbeafe)", iconColor:"#2563EB",
+    title:"Countdown & Exam Date",
+    desc:"The big number on the dashboard is your days left until the exam. Tap the date label to switch your target exam attempt (Nov '26, May '27, etc.).",
+    tip:"💡 Set the right exam date so your countdown is accurate!",
+  },
+  {
+    icon:"🔥", iconBg:"linear-gradient(135deg,#fff7ed,#ffedd5)", iconColor:"#ea580c",
+    title:"Study Streak",
+    desc:"Every day you mark progress, your streak grows. The heatmap shows your active study days over the last 12 weeks. Keep the flame alive!",
+    tip:"💡 Even marking one chapter counts as an active day.",
+  },
+  {
+    icon:"📊", iconBg:"linear-gradient(135deg,#ecfdf5,#d1fae5)", iconColor:"#047857",
+    title:"Overall Progress Ring",
+    desc:"The ring chart shows your total completion across all 6 papers. Below it you'll see counts for Done ✓, In Progress ⟳, and chapters still left.",
+    tip:null,
+  },
+  {
+    icon:"📂", iconBg:"linear-gradient(135deg,#f5f3ff,#ede9fe)", iconColor:"#7C3AED",
+    title:"Subject Cards",
+    desc:"The dashboard lists all 6 CA Final papers with a progress bar and percentage. Tap any card to open its chapters and start tracking.",
+    tip:"💡 Each paper is colour-coded for easy identification.",
+  },
+  {
+    icon:"✅", iconBg:"linear-gradient(135deg,#ecfdf5,#d1fae5)", iconColor:"#059669",
+    title:"Chapter Status",
+    desc:"Inside a subject, every chapter has a status badge. Tap it to cycle through:\n○ Pending → ⟳ In Progress → ✓ Done\nYour progress updates instantly.",
+    tip:"💡 Marking a chapter done adds it to your overall ring!",
+  },
+  {
+    icon:"🚦", iconBg:"linear-gradient(135deg,#fef2f2,#fee2e2)", iconColor:"#b91c1c",
+    title:"Priority Flags",
+    desc:"Each chapter also has a priority flag — 🔴 High, 🟡 Medium, or 🔵 Low. Tap the flag to rotate it. Use filters to focus on High-priority topics.",
+    tip:"💡 Set 🔴 High on weak areas so they stay on top of your list.",
+  },
+  {
+    icon:"🎓", iconBg:"linear-gradient(135deg,#fffbeb,#fef3c7)", iconColor:"#b45309",
+    title:"Class Attended Toggle",
+    desc:"The graduation cap 🎓 toggles whether you've attended the lecture for that chapter. Each module shows a class attendance count at the top.",
+    tip:null,
+  },
+  {
+    icon:"📝", iconBg:"linear-gradient(135deg,#f0fdf4,#dcfce7)", iconColor:"#16a34a",
+    title:"Revision Notes",
+    desc:"Tap the 📝 note icon on any chapter to write personal notes — mnemonics, case laws, key points, anything you want to remember.",
+    tip:"💡 A blue dot appears on the note icon when a note has been saved.",
+  },
+  {
+    icon:"🔍", iconBg:"linear-gradient(135deg,#fafaf9,#f5f5f4)", iconColor:"#57534e",
+    title:"Search & Filters",
+    desc:"Use the search bar at the top of any subject view to find chapters instantly. The filter bar lets you narrow by status (Done/In Progress/Pending), priority, or class attendance.",
+    tip:null,
+  },
+  {
+    icon:"🌙", iconBg:"linear-gradient(135deg,#1c1917,#292524)", iconColor:"#d4a853",
+    title:"Dark Mode",
+    desc:"Toggle Dark / Light mode using the moon/sun button in the top-right corner. Your preference is saved automatically across sessions.",
+    tip:"💡 Dark mode is easier on the eyes during late-night study sessions!",
+  },
+  {
+    icon:"🔗", iconBg:"linear-gradient(135deg,#ecfeff,#cffafe)", iconColor:"#0e7490",
+    title:"Quick Links",
+    desc:"Switch to the 'Links' tab on the dashboard to access curated study resources — ICAI BOS portal, revision materials, and more, all in one place.",
+    tip:null,
+  },
+  {
+    icon:"🎉", iconBg:"linear-gradient(135deg,#fffbeb,#fef3c7)", iconColor:"#b45309",
+    title:"You're all set!",
+    desc:"You now know everything you need to ace your CA Final revision. Remember — consistency beats perfection. Start today and keep going!",
+    tip:"📌 This tutorial is available anytime via the ❓ button.",
+  },
+];
+
+function TutorialOverlay({ onClose, username }) {
+  const {darkMode:dm} = useContext(ThemeContext);
+  const T = getT(dm);
+  const [step, setStep] = useState(0);
+  const total = TUTORIAL_STEPS.length;
+  const s = TUTORIAL_STEPS[step];
+  const isLast = step === total - 1;
+
+  const markSeen = () => {
+    try { localStorage.setItem(`cafinal_tutorial_seen:${username}`, "1"); } catch(e) {}
+  };
+
+  const handleNext = () => {
+    if (isLast) { markSeen(); onClose(); }
+    else setStep(n => n + 1);
+  };
+  const handleSkip = () => { markSeen(); onClose(); };
+  const handleBack = () => setStep(n => n - 1);
+
+  // Split desc on \n for multi-line
+  const descLines = s.desc.split("\n");
+
+  return (
+    <div className="tut-overlay" onClick={e => { if(e.target===e.currentTarget){markSeen();onClose();} }}>
+      <div className="tut-card" style={{background:T.card,borderColor:T.border,transition:"background 0.25s,border-color 0.25s"}}>
+        {/* Decorative background blur blob */}
+        <div style={{position:"absolute",top:-40,right:-40,width:160,height:160,borderRadius:"50%",
+          background:"radial-gradient(circle,rgba(180,83,9,0.07) 0%,transparent 70%)",pointerEvents:"none"}}/>
+
+        {/* Step dots */}
+        <div className="tut-step-dots">
+          {Array.from({length:total}).map((_,i)=>(
+            <div key={i} className={`tut-dot${i===step?" active":""}`}
+              onClick={()=>setStep(i)} style={{cursor:"pointer"}}/>
+          ))}
+        </div>
+
+        {/* Icon */}
+        <div className="tut-icon-wrap" style={{background:s.iconBg,border:`1.5px solid ${s.iconColor}22`}}>
+          {s.icon}
+        </div>
+
+        {/* Step counter */}
+        <div style={{textAlign:"center",fontSize:"0.6rem",fontWeight:700,color:T.muted,
+          letterSpacing:"0.12em",textTransform:"uppercase",marginBottom:8}}>
+          Step {step+1} of {total}
+        </div>
+
+        {/* Title */}
+        <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.15rem",fontWeight:700,
+          color:T.primary,textAlign:"center",marginBottom:12,lineHeight:1.3,letterSpacing:"-0.3px"}}>
+          {s.title}
+        </div>
+
+        {/* Description */}
+        <div style={{fontSize:"0.84rem",color:T.secondary,textAlign:"center",
+          lineHeight:1.65,marginBottom:s.tip?12:22}}>
+          {descLines.map((line,i)=>(
+            <span key={i}>{line}{i<descLines.length-1&&<><br/><br/></>}</span>
+          ))}
+        </div>
+
+        {/* Tip */}
+        {s.tip && (
+          <div style={{background:dm?"rgba(180,83,9,0.13)":"#fffbeb",
+            border:`1px solid ${dm?"rgba(212,168,83,0.22)":"#fde68a"}`,
+            borderRadius:10,padding:"9px 13px",marginBottom:22,
+            fontSize:"0.76rem",color:dm?"#fef3c7":"#78350f",lineHeight:1.5,textAlign:"center"}}>
+            {s.tip}
+          </div>
+        )}
+
+        {/* Navigation buttons */}
+        <div style={{display:"flex",gap:8}}>
+          {step > 0 && (
+            <button onClick={handleBack}
+              style={{flex:"0 0 auto",background:T.btn,color:T.secondary,
+                border:`1.5px solid ${T.borderBtn}`,borderRadius:12,
+                padding:"11px 16px",cursor:"pointer",fontSize:"0.83rem",fontWeight:500,
+                fontFamily:"'DM Sans',sans-serif",transition:"all 0.15s"}}>
+              ← Back
+            </button>
+          )}
+          <button onClick={handleNext}
+            style={{flex:1,background:"linear-gradient(135deg,#b45309,#92400e)",
+              color:"#fff",border:"none",borderRadius:12,
+              padding:"12px",cursor:"pointer",fontWeight:700,fontSize:"0.9rem",
+              fontFamily:"'DM Sans',sans-serif",
+              boxShadow:"0 4px 14px rgba(180,83,9,0.35)",transition:"all 0.15s"}}>
+            {isLast ? "🚀 Start Tracking!" : "Next →"}
+          </button>
+        </div>
+
+        {/* Skip link */}
+        {!isLast && (
+          <button onClick={handleSkip}
+            style={{display:"block",width:"100%",marginTop:12,background:"none",border:"none",
+              color:T.muted,fontSize:"0.72rem",cursor:"pointer",
+              fontFamily:"'DM Sans',sans-serif",padding:"4px 0"}}>
+            Skip tutorial
+          </button>
+        )}
+      </div>
+    </div>
+  );
+}
 
 // ──────────────────────────────────────────────────────────
 // AUTH SCREEN
@@ -711,10 +1167,334 @@ function AuthScreen({ onLogin }) {
 }
 
 // ──────────────────────────────────────────────────────────
-// TRACKER APP
+// SUBSCRIPTION MODAL
 // ──────────────────────────────────────────────────────────
+function SubscriptionModal({ onClose }) {
+  const {darkMode:dm} = useContext(ThemeContext);
+  const { plan:currentPlan, activatePlan } = usePlan();
+  const T = getT(dm);
+  const [payingFor, setPayingFor] = useState(null); // plan id being purchased
+  const [payStep, setPayStep] = useState("idle"); // idle | confirm | processing | success
+  const [selectedPlan, setSelectedPlan] = useState(null);
+
+  const startPurchase = (plan) => {
+    if (plan.price === 0) return;
+    setSelectedPlan(plan);
+    setPayStep("confirm");
+  };
+
+  const simulatePay = () => {
+    setPayStep("processing");
+    setTimeout(() => {
+      activatePlan(selectedPlan.id);
+      setPayStep("success");
+      setTimeout(() => { onClose(); }, 2200);
+    }, 1800);
+  };
+
+  // payment sub-screen
+  if (payStep !== "idle") {
+    const plan = selectedPlan;
+    return (
+      <div className="plan-overlay" onClick={e=>{if(e.target===e.currentTarget&&payStep!=="processing")onClose();}}>
+        <div className="plan-sheet" style={{background:T.card,borderColor:T.border}}>
+          <div style={{padding:"24px 22px 8px",display:"flex",alignItems:"center",justifyContent:"space-between"}}>
+            <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",fontWeight:700,color:T.primary}}>
+              Complete Payment
+            </div>
+            {payStep!=="processing"&&(
+              <button onClick={onClose} style={{background:T.btn,border:`1.5px solid ${T.borderBtn}`,
+                borderRadius:8,padding:"5px 12px",cursor:"pointer",color:T.muted,fontSize:"0.8rem"}}>✕</button>
+            )}
+          </div>
+
+          {payStep==="success" ? (
+            <div style={{padding:"32px 22px 40px",textAlign:"center"}}>
+              <div style={{fontSize:"3.5rem",marginBottom:16,animation:"checkPop 0.4s cubic-bezier(.22,1,.36,1) both"}}>✅</div>
+              <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.2rem",fontWeight:700,
+                color:"#047857",marginBottom:8}}>Payment Successful!</div>
+              <div style={{fontSize:"0.85rem",color:T.secondary,marginBottom:16}}>
+                <span style={{fontWeight:700,color:plan.color}}>{plan.emoji} {plan.name} Plan</span> is now active.<br/>
+                Enjoy all your unlocked features!
+              </div>
+              <div style={{display:"flex",flexWrap:"wrap",gap:6,justifyContent:"center"}}>
+                {plan.newFeatures.map(f=>(
+                  <span key={f} style={{background:dm?plan.color+"22":plan.light,
+                    color:plan.color,border:`1px solid ${plan.border}`,
+                    borderRadius:20,padding:"4px 12px",fontSize:"0.72rem",fontWeight:600}}>✓ {f}</span>
+                ))}
+              </div>
+            </div>
+          ) : (
+            <div style={{padding:"16px 22px 32px"}}>
+              {/* Order summary */}
+              <div style={{background:dm?plan.color+"18":plan.light,border:`1.5px solid ${plan.border}`,
+                borderRadius:14,padding:"14px 16px",marginBottom:18}}>
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"center"}}>
+                  <div>
+                    <div style={{fontSize:"0.65rem",fontWeight:700,color:plan.color,letterSpacing:"0.1em",
+                      textTransform:"uppercase",marginBottom:4}}>Order Summary</div>
+                    <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1rem",fontWeight:700,color:T.primary}}>
+                      CA Final Tracker — {plan.name}
+                    </div>
+                    <div style={{fontSize:"0.72rem",color:T.secondary,marginTop:3}}>
+                      Lifetime access · {plan.newFeatures.length} features unlocked
+                    </div>
+                  </div>
+                  <div style={{textAlign:"right"}}>
+                    <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.6rem",fontWeight:800,
+                      color:plan.color,lineHeight:1}}>₹{plan.price}</div>
+                    <div style={{fontSize:"0.6rem",color:T.muted}}>one-time</div>
+                  </div>
+                </div>
+              </div>
+
+              {/* Mock UPI section */}
+              <div style={{background:T.card2,border:`1px solid ${T.border}`,borderRadius:12,
+                padding:"14px 16px",marginBottom:16,textAlign:"center"}}>
+                <div style={{fontSize:"0.65rem",fontWeight:700,color:T.muted,letterSpacing:"0.1em",
+                  textTransform:"uppercase",marginBottom:10}}>Scan & Pay via UPI</div>
+                {/* Mock QR code block */}
+                <div style={{width:120,height:120,margin:"0 auto 10px",
+                  background:dm?"#fff":"#1c1917",borderRadius:10,padding:8,
+                  display:"grid",gridTemplateColumns:"repeat(7,1fr)",gap:1.5,boxSizing:"border-box"}}>
+                  {Array.from({length:49}).map((_,i)=>{
+                    const corners=[[0,1,2,7,8,9,14,15,16],[2,9,16],[32,39,46],[30,31,32,37,38,39,44,45,46]];
+                    const isCorner = i<7&&i>0?i<3:false;
+                    // Simple pseudo-random QR pattern
+                    const seed = (i*7+13)%17;
+                    const filled = seed<9 || i===24 || (i>20&&i<28&&i%3===0);
+                    return <div key={i} style={{
+                      borderRadius:1,
+                      background:filled?(dm?"#1c1917":"#fff"):"transparent",
+                      aspectRatio:"1",
+                    }}/>;
+                  })}
+                </div>
+                <div style={{fontSize:"0.72rem",fontWeight:600,color:T.primary}}>cafinaltracker@upi</div>
+                <div style={{fontSize:"0.62rem",color:T.muted,marginTop:2}}>Amount: ₹{plan.price}</div>
+              </div>
+
+              {/* Demo note */}
+              <div style={{background:dm?"rgba(180,83,9,0.12)":"#fffbeb",border:"1px solid #fde68a",
+                borderRadius:10,padding:"9px 14px",marginBottom:14,
+                display:"flex",gap:8,alignItems:"flex-start",fontSize:"0.7rem",color:"#92400e",lineHeight:1.5}}>
+                <span style={{flexShrink:0}}>⚠️</span>
+                <span><strong>Demo Mode:</strong> No real payment is processed. Click "Confirm Payment" to simulate activation and unlock features instantly.</span>
+              </div>
+
+              <button className="plan-cta-btn" onClick={simulatePay}
+                disabled={payStep==="processing"}
+                style={{background:payStep==="processing"?T.ctaLoading:plan.color,
+                  color:"#fff",
+                  boxShadow:payStep==="processing"?"none":`0 4px 16px ${plan.color}55`,
+                  animation:payStep==="idle"?"payPulse 2s ease infinite":"none"}}>
+                {payStep==="processing"
+                  ? <><div className="spinner"/>Processing…</>
+                  : <>✓ Confirm Payment — ₹{plan.price}</>}
+              </button>
+              <button onClick={()=>setPayStep("idle")}
+                style={{width:"100%",marginTop:10,background:"none",border:"none",
+                  color:T.muted,cursor:"pointer",fontSize:"0.75rem",padding:"6px",fontFamily:"'DM Sans',sans-serif"}}>
+                ← Back to plans
+              </button>
+            </div>
+          )}
+        </div>
+      </div>
+    );
+  }
+
+  // Main plan selection screen
+  return (
+    <div className="plan-overlay" onClick={e=>{if(e.target===e.currentTarget)onClose();}}>
+      <div className="plan-sheet" style={{background:T.card,borderColor:T.border}}>
+        {/* Handle bar */}
+        <div style={{width:40,height:4,background:T.borderBtn,borderRadius:99,margin:"12px auto 0"}}/>
+
+        {/* Header */}
+        <div style={{padding:"18px 22px 4px"}}>
+          <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start"}}>
+            <div>
+              <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.2rem",fontWeight:700,
+                color:T.primary,letterSpacing:"-0.3px"}}>✨ Unlock Your Tracker</div>
+              <div style={{fontSize:"0.73rem",color:T.secondary,marginTop:4}}>
+                One-time payment · Lifetime access · No subscription
+              </div>
+            </div>
+            <button onClick={onClose} style={{background:T.btn,border:`1.5px solid ${T.borderBtn}`,
+              borderRadius:8,padding:"5px 12px",cursor:"pointer",color:T.muted,fontSize:"0.8rem",flexShrink:0}}>✕</button>
+          </div>
+
+          {/* Current plan pill */}
+          <div style={{display:"inline-flex",alignItems:"center",gap:6,
+            background:dm?"rgba(16,185,129,0.15)":"#ecfdf5",
+            border:"1px solid #a7f3d0",borderRadius:20,padding:"4px 12px",marginTop:10}}>
+            <div style={{width:6,height:6,borderRadius:"50%",background:"#10b981"}}/>
+            <span style={{fontSize:"0.68rem",fontWeight:600,color:"#047857"}}>
+              Current: {PLANS.find(p=>p.id===currentPlan)?.name||"Free"} Plan
+            </span>
+          </div>
+        </div>
+
+        {/* Plans list */}
+        <div style={{padding:"14px 16px 0",display:"flex",flexDirection:"column",gap:10}}>
+          {PLANS.map((plan)=>{
+            const isActive = currentPlan === plan.id;
+            const isLower = PLAN_LEVEL[plan.id] < PLAN_LEVEL[currentPlan];
+            return (
+              <div key={plan.id} className={`plan-card-item${isActive?" active-plan":""}`}
+                style={{borderColor:isActive?"#047857":plan.border,
+                  background:isActive?(dm?"rgba(4,120,87,0.08)":"#f0fdf4"):T.card,
+                  transition:"all 0.2s ease",cursor:"default"}}>
+
+                {/* Plan header row */}
+                <div style={{display:"flex",justifyContent:"space-between",alignItems:"flex-start",marginBottom:10}}>
+                  <div style={{display:"flex",alignItems:"center",gap:8}}>
+                    <div style={{width:36,height:36,borderRadius:10,flexShrink:0,
+                      background:dm?plan.color+"22":plan.light,
+                      border:`1.5px solid ${plan.border}`,
+                      display:"flex",alignItems:"center",justifyContent:"center",fontSize:"1.1rem"}}>
+                      {plan.emoji}
+                    </div>
+                    <div>
+                      <div style={{display:"flex",alignItems:"center",gap:6}}>
+                        <span style={{fontFamily:"'Playfair Display',serif",fontSize:"0.95rem",
+                          fontWeight:700,color:T.primary}}>{plan.name}</span>
+                        {plan.badge&&(
+                          <span style={{background:dm?plan.color+"22":plan.light,color:plan.color,
+                            border:`1px solid ${plan.border}`,borderRadius:20,
+                            padding:"1px 7px",fontSize:"0.58rem",fontWeight:700,letterSpacing:"0.05em"}}>
+                            {plan.badge}
+                          </span>
+                        )}
+                        {isActive&&(
+                          <span style={{background:"#ecfdf5",color:"#047857",
+                            border:"1px solid #a7f3d0",borderRadius:20,
+                            padding:"1px 7px",fontSize:"0.58rem",fontWeight:700}}>✓ Active</span>
+                        )}
+                      </div>
+                      <div style={{fontSize:"0.65rem",color:T.muted,marginTop:1}}>{plan.tagline}</div>
+                    </div>
+                  </div>
+                  <div style={{textAlign:"right",flexShrink:0}}>
+                    {plan.price===0
+                      ? <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",fontWeight:800,color:T.primary}}>Free</div>
+                      : <>
+                          <div style={{fontFamily:"'Playfair Display',serif",fontSize:"1.1rem",fontWeight:800,color:plan.color}}>₹{plan.price}</div>
+                          <div style={{fontSize:"0.58rem",color:T.muted}}>one-time</div>
+                        </>
+                    }
+                  </div>
+                </div>
+
+                {/* Feature bullets (show new features only for brevity) */}
+                <div style={{display:"flex",flexWrap:"wrap",gap:5,marginBottom:10}}>
+                  {(plan.newFeatures||[]).map(f=>(
+                    <span key={f} style={{background:dm?plan.color+"18":plan.light,
+                      color:plan.color,border:`1px solid ${plan.border}`,
+                      borderRadius:20,padding:"3px 10px",fontSize:"0.67rem",fontWeight:600}}>✓ {f}</span>
+                  ))}
+                  {plan.id!=="free"&&<span style={{background:T.card2,color:T.muted,
+                    border:`1px solid ${T.border}`,borderRadius:20,
+                    padding:"3px 10px",fontSize:"0.67rem"}}>+ all lower plan features</span>}
+                </div>
+
+                {/* CTA */}
+                {!isActive && !isLower && plan.price > 0 && (
+                  <button className="plan-cta-btn" onClick={()=>startPurchase(plan)}
+                    style={{background:plan.color,color:"#fff",
+                      boxShadow:`0 3px 12px ${plan.color}44`,padding:"11px"}}>
+                    Buy {plan.name} — ₹{plan.price} →
+                  </button>
+                )}
+                {isActive && (
+                  <div style={{textAlign:"center",fontSize:"0.72rem",color:"#047857",
+                    fontWeight:600,padding:"8px 0 2px"}}>
+                    ✅ You're on this plan
+                  </div>
+                )}
+                {isLower && (
+                  <div style={{textAlign:"center",fontSize:"0.68rem",color:T.muted,padding:"6px 0 2px"}}>
+                    Included in your current plan
+                  </div>
+                )}
+                {plan.price===0 && !isActive && (
+                  <div style={{textAlign:"center",fontSize:"0.68rem",color:T.muted,padding:"6px 0 2px"}}>
+                    Default — no payment needed
+                  </div>
+                )}
+              </div>
+            );
+          })}
+        </div>
+
+        {/* Footer */}
+        <div style={{padding:"16px 22px 24px",textAlign:"center",
+          borderTop:`1px solid ${T.border}`,marginTop:14}}>
+          <div style={{fontSize:"0.65rem",color:T.muted,lineHeight:1.6}}>
+            🔒 Secure · One-time payment · No hidden charges<br/>
+            For queries contact <span style={{color:"#b45309",fontWeight:600}}>CA Avishi Gupta</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// ── Locked Badge (inline, for chapter-row buttons) ──
+function LockedBtn({ label, planNeeded }) {
+  const { openUpgrade } = usePlan();
+  const planInfo = PLANS.find(p=>p.id===planNeeded) || PLANS[1];
+  return (
+    <button onClick={openUpgrade} className="locked-badge"
+      style={{background:"#fafaf9",color:"#9ca3af",borderColor:"#e5e7eb",
+        opacity:0.8,fontFamily:"'DM Sans',sans-serif"}}>
+      🔒 {label}
+    </button>
+  );
+}
+
+// ── Locked Section Card (for heatmap, streak, etc.) ──
+function LockedSection({ emoji, title, desc, planNeeded, compact }) {
+  const { openUpgrade } = usePlan();
+  const planInfo = PLANS.find(p=>p.id===planNeeded) || PLANS[1];
+  const {darkMode:dm} = useContext(ThemeContext);
+  const T = getT(dm);
+  if (compact) return (
+    <div onClick={openUpgrade} className="locked-section"
+      style={{padding:"12px 14px",marginBottom:10,display:"flex",alignItems:"center",gap:10,textAlign:"left"}}>
+      <span style={{fontSize:"1.4rem",flexShrink:0}}>🔒</span>
+      <div>
+        <div style={{fontSize:"0.75rem",fontWeight:600,color:T.primary,marginBottom:2}}>{title}</div>
+        <div style={{fontSize:"0.65rem",color:T.muted}}>{desc}</div>
+      </div>
+      <span style={{marginLeft:"auto",background:dm?planInfo.color+"22":planInfo.light,
+        color:planInfo.color,border:`1px solid ${planInfo.border}`,
+        borderRadius:20,padding:"3px 10px",fontSize:"0.62rem",fontWeight:700,flexShrink:0,whiteSpace:"nowrap"}}>
+        {planInfo.name} ↑
+      </span>
+    </div>
+  );
+  return (
+    <div onClick={openUpgrade} className="locked-section"
+      style={{marginBottom:14}}>
+      <div style={{fontSize:"2rem",marginBottom:8}}>{emoji||"🔒"}</div>
+      <div style={{fontFamily:"'Playfair Display',serif",fontSize:"0.9rem",fontWeight:700,
+        color:T.primary,marginBottom:4}}>{title}</div>
+      <div style={{fontSize:"0.73rem",color:T.secondary,marginBottom:12,lineHeight:1.5}}>{desc}</div>
+      <span style={{background:dm?planInfo.color+"22":planInfo.light,
+        color:planInfo.color,border:`1px solid ${planInfo.border}`,
+        borderRadius:20,padding:"5px 16px",fontSize:"0.72rem",fontWeight:700}}>
+        🔓 Unlock with {planInfo.name} Plan — ₹{planInfo.price}
+      </span>
+    </div>
+  );
+}
+
 function TrackerApp({ user, onLogout }) {
   const {darkMode:dm} = useContext(ThemeContext);
+  const { plan, openUpgrade } = usePlan();
   const T = getT(dm);
 
   const [view, setView] = useState("dashboard");
@@ -730,6 +1510,10 @@ function TrackerApp({ user, onLogout }) {
   const [reorderMode, setReorderMode] = useState(false);
   const [logoutConfirm, setLogoutConfirm] = useState(false);
   const [saving, setSaving] = useState(false);
+  const [showTutorial, setShowTutorial] = useState(() => {
+    try { return !localStorage.getItem(`cafinal_tutorial_seen:${user.username}`); } catch(e) { return false; }
+  });
+  const [showPlanModal, setShowPlanModal] = useState(false);
   const [dashTab, setDashTab] = useState("subjects"); // "subjects" | "links"
   const [examDate, setExamDate] = useState(() => {
     try { return localStorage.getItem('cafinal_examdate') || "2026-11-01"; } catch(e) { return "2026-11-01"; }
@@ -954,8 +1738,25 @@ function TrackerApp({ user, onLogout }) {
             </div>
           </div>
           <div style={{display:"flex",flexDirection:"column",gap:6,alignItems:"flex-end"}}>
-            {/* Dark toggle */}
-            <DarkToggle/>
+            {/* Dark toggle + Help row */}
+            <div style={{display:"flex",gap:6,alignItems:"center"}}>
+              <DarkToggle/>
+              <button className="tut-help-btn" onClick={()=>setShowTutorial(true)} title="Open Tutorial">❓</button>
+            </div>
+            <button onClick={()=>setShowPlanModal(true)}
+              style={{display:"flex",alignItems:"center",gap:5,
+                background:plan==="free"?(dm?"rgba(180,83,9,0.15)":"#fffbeb"):
+                  plan==="pro"?(dm?"rgba(37,99,235,0.15)":"#eff6ff"):
+                  plan==="elite"?(dm?"rgba(124,58,237,0.15)":"#f5f3ff"):
+                  (dm?"rgba(180,83,9,0.15)":"#fffbeb"),
+                color:plan==="free"?"#b45309":plan==="pro"?"#2563eb":plan==="elite"?"#7c3aed":"#b45309",
+                border:`1.5px solid ${plan==="free"?"#fde68a":plan==="pro"?"#bfdbfe":plan==="elite"?"#ddd6fe":"#fde68a"}`,
+                borderRadius:20,padding:"4px 11px",fontSize:"0.64rem",cursor:"pointer",
+                fontWeight:700,whiteSpace:"nowrap",transition:"all 0.15s"}}>
+              {plan==="free"?"📖":plan==="pro"?"⚡":plan==="elite"?"🏆":"👑"}
+              {" "}{(PLANS.find(p=>p.id===plan)||PLANS[0]).name}
+              {plan!=="supreme"&&<span style={{opacity:0.7,fontSize:"0.58rem"}}>· Upgrade ↑</span>}
+            </button>
             <button onClick={()=>{setNameInput(user.name);setEditingName(true);}}
               style={{background:T.btn,border:`1.5px solid ${T.borderBtn}`,borderRadius:8,
                 padding:"4px 10px",fontSize:"0.64rem",color:T.subtle,cursor:"pointer",
@@ -1060,6 +1861,86 @@ function TrackerApp({ user, onLogout }) {
           </div>
         </div>
 
+        {/* Motivational Quote card */}
+        {(()=>{
+          const QUOTES = [
+            { text: "The secret of getting ahead is getting started.", author: "Mark Twain" },
+            { text: "Success is the sum of small efforts, repeated day in and day out.", author: "Robert Collier" },
+            { text: "Don't watch the clock; do what it does — keep going.", author: "Sam Levenson" },
+            { text: "It always seems impossible until it's done.", author: "Nelson Mandela" },
+            { text: "The harder you work for something, the greater you'll feel when you achieve it.", author: "Unknown" },
+            { text: "Discipline is the bridge between goals and accomplishment.", author: "Jim Rohn" },
+            { text: "You don't have to be great to start, but you have to start to be great.", author: "Zig Ziglar" },
+            { text: "Push yourself, because no one else is going to do it for you.", author: "Unknown" },
+            { text: "Great things never come from comfort zones.", author: "Unknown" },
+            { text: "Dream it. Wish it. Do it.", author: "Unknown" },
+            { text: "Success doesn't just find you. You have to go out and get it.", author: "Unknown" },
+            { text: "The key to success is to focus on goals, not obstacles.", author: "Unknown" },
+            { text: "Don't stop when you're tired. Stop when you're done.", author: "Unknown" },
+            { text: "Wake up with determination. Go to bed with satisfaction.", author: "Unknown" },
+            { text: "Little by little, a little becomes a lot.", author: "Tanzanian Proverb" },
+            { text: "Believe you can and you're halfway there.", author: "Theodore Roosevelt" },
+            { text: "Your limitation — it's only your imagination.", author: "Unknown" },
+            { text: "Sometimes later becomes never. Do it now.", author: "Unknown" },
+            { text: "Hard work beats talent when talent doesn't work hard.", author: "Tim Notke" },
+            { text: "Don't count the days, make the days count.", author: "Muhammad Ali" },
+            { text: "A goal without a plan is just a wish.", author: "Antoine de Saint-Exupéry" },
+            { text: "The expert in anything was once a beginner.", author: "Helen Hayes" },
+            { text: "Strive for progress, not perfection.", author: "Unknown" },
+            { text: "You are braver than you believe, stronger than you seem, and smarter than you think.", author: "A.A. Milne" },
+            { text: "The only way to do great work is to love what you do.", author: "Steve Jobs" },
+            { text: "Opportunities don't happen. You create them.", author: "Chris Grosser" },
+            { text: "Don't be afraid to give up the good to go for the great.", author: "John D. Rockefeller" },
+            { text: "I find that the harder I work, the more luck I seem to have.", author: "Thomas Jefferson" },
+            { text: "There are no shortcuts to any place worth going.", author: "Beverly Sills" },
+            { text: "The future belongs to those who believe in the beauty of their dreams.", author: "Eleanor Roosevelt" },
+          ];
+          const dayIdx = Math.floor(Date.now() / 86400000) % QUOTES.length;
+          const q = QUOTES[dayIdx];
+          return (
+            <div style={{
+              background: dm
+                ? "linear-gradient(135deg,rgba(180,83,9,0.13) 0%,rgba(212,168,83,0.08) 100%)"
+                : "linear-gradient(135deg,#fffbeb 0%,#fef3c7 100%)",
+              borderRadius: 14,
+              padding: "14px 18px",
+              marginBottom: 14,
+              border: `1.5px solid ${dm ? "rgba(212,168,83,0.22)" : "#fde68a"}`,
+              boxShadow: `0 1px 4px ${dm ? "rgba(0,0,0,0.2)" : "rgba(0,0,0,0.04)"}`,
+              position: "relative",
+              overflow: "hidden",
+            }}>
+              {/* Decorative large quote mark */}
+              <div style={{
+                position: "absolute", top: -4, left: 12,
+                fontFamily: "'Playfair Display',serif",
+                fontSize: "5rem", lineHeight: 1,
+                color: dm ? "rgba(212,168,83,0.12)" : "rgba(180,83,9,0.10)",
+                fontWeight: 800, pointerEvents: "none", userSelect: "none",
+              }}>"</div>
+              <div style={{
+                fontSize: "0.58rem", fontWeight: 700, color: "#b45309",
+                letterSpacing: "0.13em", textTransform: "uppercase", marginBottom: 6,
+              }}>✨ Quote of the Day</div>
+              <div style={{
+                fontFamily: "'Playfair Display',serif",
+                fontSize: "0.88rem", fontWeight: 600,
+                color: dm ? "#fef3c7" : "#78350f",
+                lineHeight: 1.55, marginBottom: 7,
+                paddingLeft: 2,
+              }}>
+                "{q.text}"
+              </div>
+              <div style={{
+                fontSize: "0.63rem", color: dm ? "#d4a853" : "#b45309",
+                fontWeight: 600, textAlign: "right",
+              }}>
+                — {q.author}
+              </div>
+            </div>
+          );
+        })()}
+
         {/* Overall Progress card */}
         <div style={{background:T.card,borderRadius:14,padding:"13px 16px",marginBottom:14,
           border:`1.5px solid ${T.border}`,boxShadow:`0 1px 4px ${dm?"rgba(0,0,0,0.2)":"rgba(0,0,0,0.04)"}`,
@@ -1087,7 +1968,6 @@ function TrackerApp({ user, onLogout }) {
         {/* Streak heatmap card */}
         {(()=>{
           const today = new Date(); today.setHours(0,0,0,0);
-          // build 84 days (12 weeks) ending today
           const days = Array.from({length:84},(_,i)=>{
             const d = new Date(today); d.setDate(d.getDate()-(83-i));
             return d.toISOString().slice(0,10);
@@ -1096,6 +1976,18 @@ function TrackerApp({ user, onLogout }) {
           const weeks = [];
           for(let w=0;w<12;w++) weeks.push(days.slice(w*7,(w+1)*7));
           const DAY_LABELS = ["S","M","T","W","T","F","S"];
+          const hasStreak = planHas(plan,"streak");
+          const hasHeatmap = planHas(plan,"heatmap");
+
+          // Free: show teaser locked card
+          if (!hasStreak) return (
+            <LockedSection emoji="🔥" title="Study Streak Tracker"
+              desc="Track your daily study consistency with a streak counter and longest streak record."
+              planNeeded="pro" />
+          );
+
+          // Pro: show streak count but not heatmap
+          // Elite+: show full heatmap
           return (
           <div style={{background:T.card,borderRadius:14,padding:"13px 16px",marginBottom:14,
             border:`1.5px solid ${T.border}`,
@@ -1104,7 +1996,7 @@ function TrackerApp({ user, onLogout }) {
             <div style={{display:"flex",justifyContent:"space-between",alignItems:"center",marginBottom:10}}>
               <div>
                 <span style={{fontSize:"0.7rem",fontWeight:600,color:T.primary}}>🔥 Study Streak</span>
-                <span style={{fontSize:"0.6rem",color:T.muted,marginLeft:6}}>Last 12 weeks</span>
+                {hasHeatmap && <span style={{fontSize:"0.6rem",color:T.muted,marginLeft:6}}>Last 12 weeks</span>}
               </div>
               <div style={{display:"flex",gap:12}}>
                 {[{label:"Current",val:streak.current,color:"#f97316"},{label:"Longest",val:streak.longest,color:"#d4a853"}].map(({label,val,color})=>(
@@ -1115,6 +2007,8 @@ function TrackerApp({ user, onLogout }) {
                 ))}
               </div>
             </div>
+            {hasHeatmap ? (
+            <>
             {/* Heatmap grid */}
             <div style={{display:"flex",gap:3}}>
               {/* Day labels column */}
@@ -1162,6 +2056,20 @@ function TrackerApp({ user, onLogout }) {
               ))}
               <span style={{fontSize:"0.52rem",color:T.muted}}>More</span>
             </div>
+            </>
+            ) : (
+              <div onClick={openUpgrade} style={{marginTop:6,background:dm?"rgba(124,58,237,0.1)":"#f5f3ff",
+                border:"1.5px dashed #ddd6fe",borderRadius:10,padding:"10px 14px",cursor:"pointer",
+                display:"flex",alignItems:"center",gap:8,transition:"all 0.2s"}}>
+                <span style={{fontSize:"1.2rem"}}>📅</span>
+                <div style={{flex:1}}>
+                  <div style={{fontSize:"0.72rem",fontWeight:600,color:"#7c3aed"}}>Unlock 12-week Heatmap</div>
+                  <div style={{fontSize:"0.62rem",color:"#a78bfa"}}>See your study activity visualised over time</div>
+                </div>
+                <span style={{background:"#f5f3ff",color:"#7c3aed",border:"1px solid #ddd6fe",
+                  borderRadius:20,padding:"3px 9px",fontSize:"0.6rem",fontWeight:700,flexShrink:0}}>Elite ↑</span>
+              </div>
+            )}
           </div>
           );
         })()}
@@ -1186,15 +2094,54 @@ function TrackerApp({ user, onLogout }) {
             border:"1px solid #a7f3d0",flexShrink:0}}>● Synced</div>
         </div>
 
+        {/* Plan upgrade banner — only for non-Supreme */}
+        {plan!=="supreme"&&(
+          <div onClick={()=>setShowPlanModal(true)}
+            style={{background:
+              plan==="free"?"linear-gradient(135deg,#fffbeb,#fef3c7)":
+              plan==="pro"?"linear-gradient(135deg,#eff6ff,#dbeafe)":
+              "linear-gradient(135deg,#f5f3ff,#ede9fe)",
+              border:`1.5px solid ${plan==="free"?"#fde68a":plan==="pro"?"#bfdbfe":"#ddd6fe"}`,
+              borderRadius:12,padding:"10px 14px",marginBottom:14,cursor:"pointer",
+              display:"flex",alignItems:"center",gap:10,transition:"opacity 0.15s"}}
+            onMouseOver={e=>e.currentTarget.style.opacity="0.85"} onMouseOut={e=>e.currentTarget.style.opacity="1"}>
+            <span style={{fontSize:"1.2rem",flexShrink:0}}>
+              {plan==="free"?"⚡":plan==="pro"?"🏆":"👑"}
+            </span>
+            <div style={{flex:1,minWidth:0}}>
+              <div style={{fontSize:"0.72rem",fontWeight:700,
+                color:plan==="free"?"#b45309":plan==="pro"?"#2563eb":"#7c3aed"}}>
+                {plan==="free"?"Upgrade to Pro — unlock Notes, Streak & Attendance":
+                 plan==="pro"?"Upgrade to Elite — unlock Priority, Heatmap & Revision Rounds":
+                 "Upgrade to Supreme — unlock Add/Reorder, Links & Export"}
+              </div>
+              <div style={{fontSize:"0.62rem",
+                color:plan==="free"?"#92400e":plan==="pro"?"#1d4ed8":"#5b21b6",marginTop:2}}>
+                Starting from ₹{plan==="free"?99:plan==="pro"?199:299} · one-time payment
+              </div>
+            </div>
+            <span style={{fontSize:"0.7rem",
+              color:plan==="free"?"#b45309":plan==="pro"?"#2563eb":"#7c3aed",flexShrink:0}}>→</span>
+          </div>
+        )}
+
         {/* Dashboard tabs */}
         <div style={{display:"flex",borderRadius:12,overflow:"hidden",border:`1.5px solid ${T.border}`,marginBottom:14,transition:"border-color 0.25s"}}>
-          {[["subjects","📚 Subjects"],["links","🔗 Important Links"]].map(([key,label])=>(
-            <button key={key} onClick={()=>setDashTab(key)}
-              className={`tab-btn ${dashTab===key?"active":"inactive"}`}
-              style={{fontSize:"0.76rem",letterSpacing:"0.01em"}}>
-              {label}
-            </button>
-          ))}
+          {[["subjects","📚 Subjects"],["links","🔗 Important Links"]].map(([key,label])=>{
+            const isLinks = key==="links";
+            const lockedLinks = isLinks && !planHas(plan,"links");
+            return (
+              <button key={key}
+                onClick={()=>{ if(lockedLinks){openUpgrade();}else setDashTab(key); }}
+                className={`tab-btn ${dashTab===key?"active":"inactive"}`}
+                style={{fontSize:"0.76rem",letterSpacing:"0.01em",
+                  opacity:lockedLinks?0.6:1,
+                  position:"relative"}}>
+                {label}
+                {lockedLinks&&<span style={{fontSize:"0.58rem",marginLeft:4}}>🔒</span>}
+              </button>
+            );
+          })}
         </div>
 
         {/* Subject grid */}
@@ -1290,6 +2237,8 @@ function TrackerApp({ user, onLogout }) {
 
       {editingName&&<EditNameModal/>}
       {logoutConfirm&&<LogoutModal/>}
+      {showTutorial&&<TutorialOverlay onClose={()=>setShowTutorial(false)} username={user.username}/>}
+      {showPlanModal&&<SubscriptionModal onClose={()=>setShowPlanModal(false)}/>}
     </div>
   );
 
@@ -1339,55 +2288,71 @@ function TrackerApp({ user, onLogout }) {
                 style={{background:s.bg,color:s.c,border:`1px solid ${s.border}`,borderRadius:20,
                   padding:"3px 10px",fontSize:"0.66rem",fontWeight:600,cursor:"pointer",transition:"all 0.15s"}}>
                 {s.l}</button>
-              <button onClick={()=>setTopic(id,{priority:PRI_SEQ[(PRI_SEQ.indexOf(state.priority||"medium")+1)%3]})}
-                style={{background:p.bg,color:p.c,border:`1px solid ${p.border}`,borderRadius:20,
-                  padding:"3px 10px",fontSize:"0.66rem",fontWeight:600,cursor:"pointer",transition:"all 0.15s"}}>
-                {p.l}</button>
-              <button onClick={()=>{setNoteModal(id);setNoteText(state.note||"");}}
-                style={{background:state.note?(dm?subject.color+"22":subject.light):T.btn,
-                  color:state.note?subject.text:T.muted,
-                  border:`1px solid ${state.note?subject.color+"35":T.borderBtn}`,
-                  borderRadius:20,padding:"3px 10px",fontSize:"0.66rem",cursor:"pointer",transition:"all 0.15s"}}>
-                {state.note?"📝 Note":"+ Note"}</button>
-              <button onClick={()=>setTopic(id,{classAttended:!state.classAttended})}
-                style={{background:state.classAttended?(dm?"rgba(16,185,129,0.18)":"#ecfdf5"):T.btn,
-                  color:state.classAttended?"#047857":T.muted,
-                  border:`1px solid ${state.classAttended?(dm?"rgba(16,185,129,0.4)":"#a7f3d0"):T.borderBtn}`,
-                  borderRadius:20,padding:"3px 10px",fontSize:"0.66rem",cursor:"pointer",transition:"all 0.15s",
-                  fontWeight:state.classAttended?600:400}}>
-                {state.classAttended?"🎓 Class ✓":"🎓 Class"}</button>
-              <div style={{display:"flex",gap:4,marginLeft:1}}>
-                {["r1","r2","r3"].map((rk,ri)=>{
-                  const on = !!state[rk];
-                  const t = RTOGGLE[ri];
-                  const handleRev = () => {
-                    const newOn = !on;
-                    const patch = {[rk]: newOn};
-                    if (newOn) {
-                      if (rk==="r3") { patch.status = "done"; }
-                      else { if (state.status === "pending") patch.status = "inprogress"; }
-                    } else {
-                      if (rk==="r3") { patch.status = (state.r1 || state.r2) ? "inprogress" : "pending"; }
-                    }
-                    setTopic(id, patch);
-                  };
-                  return (
-                    <button key={rk} onClick={handleRev}
-                      title={`Revision ${ri+1} ${on?"complete":"pending"}`}
-                      style={{
-                        background:on?t.onBg:T.btn,
-                        color:on?t.on:dm?"#3d3a37":"#c4bdb7",
-                        border:`1.5px solid ${on?t.onBorder:T.borderBtn}`,
-                        borderRadius:7,padding:"3px 8px",fontSize:"0.63rem",fontWeight:700,
-                        cursor:"pointer",letterSpacing:"0.04em",
-                        transition:"all 0.17s ease",
-                        boxShadow:on?`0 1px 4px ${t.onBorder}`:"none",
-                      }}>
-                      {on?"✓ ":""}R{ri+1}
-                    </button>
-                  );
-                })}
-              </div>
+              {/* Priority flag — Elite+ */}
+              {planHas(plan,"priority")
+                ? <button onClick={()=>setTopic(id,{priority:PRI_SEQ[(PRI_SEQ.indexOf(state.priority||"medium")+1)%3]})}
+                    style={{background:p.bg,color:p.c,border:`1px solid ${p.border}`,borderRadius:20,
+                      padding:"3px 10px",fontSize:"0.66rem",fontWeight:600,cursor:"pointer",transition:"all 0.15s"}}>
+                    {p.l}</button>
+                : <LockedBtn label="Priority" planNeeded="elite"/>
+              }
+              {/* Notes — Pro+ */}
+              {planHas(plan,"notes")
+                ? <button onClick={()=>{setNoteModal(id);setNoteText(state.note||"");}}
+                    style={{background:state.note?(dm?subject.color+"22":subject.light):T.btn,
+                      color:state.note?subject.text:T.muted,
+                      border:`1px solid ${state.note?subject.color+"35":T.borderBtn}`,
+                      borderRadius:20,padding:"3px 10px",fontSize:"0.66rem",cursor:"pointer",transition:"all 0.15s"}}>
+                    {state.note?"📝 Note":"+ Note"}</button>
+                : <LockedBtn label="Note" planNeeded="pro"/>
+              }
+              {/* Class attendance — Pro+ */}
+              {planHas(plan,"classAttend")
+                ? <button onClick={()=>setTopic(id,{classAttended:!state.classAttended})}
+                    style={{background:state.classAttended?(dm?"rgba(16,185,129,0.18)":"#ecfdf5"):T.btn,
+                      color:state.classAttended?"#047857":T.muted,
+                      border:`1px solid ${state.classAttended?(dm?"rgba(16,185,129,0.4)":"#a7f3d0"):T.borderBtn}`,
+                      borderRadius:20,padding:"3px 10px",fontSize:"0.66rem",cursor:"pointer",transition:"all 0.15s",
+                      fontWeight:state.classAttended?600:400}}>
+                    {state.classAttended?"🎓 Class ✓":"🎓 Class"}</button>
+                : <LockedBtn label="Class" planNeeded="pro"/>
+              }
+              {/* R1/R2/R3 — Elite+ */}
+              {planHas(plan,"revisions")
+                ? <div style={{display:"flex",gap:4,marginLeft:1}}>
+                    {["r1","r2","r3"].map((rk,ri)=>{
+                      const on = !!state[rk];
+                      const t = RTOGGLE[ri];
+                      const handleRev = () => {
+                        const newOn = !on;
+                        const patch = {[rk]: newOn};
+                        if (newOn) {
+                          if (rk==="r3") { patch.status = "done"; }
+                          else { if (state.status === "pending") patch.status = "inprogress"; }
+                        } else {
+                          if (rk==="r3") { patch.status = (state.r1 || state.r2) ? "inprogress" : "pending"; }
+                        }
+                        setTopic(id, patch);
+                      };
+                      return (
+                        <button key={rk} onClick={handleRev}
+                          title={`Revision ${ri+1} ${on?"complete":"pending"}`}
+                          style={{
+                            background:on?t.onBg:T.btn,
+                            color:on?t.on:dm?"#3d3a37":"#c4bdb7",
+                            border:`1.5px solid ${on?t.onBorder:T.borderBtn}`,
+                            borderRadius:7,padding:"3px 8px",fontSize:"0.63rem",fontWeight:700,
+                            cursor:"pointer",letterSpacing:"0.04em",
+                            transition:"all 0.17s ease",
+                            boxShadow:on?`0 1px 4px ${t.onBorder}`:"none",
+                          }}>
+                          {on?"✓ ":""}R{ri+1}
+                        </button>
+                      );
+                    })}
+                  </div>
+                : <LockedBtn label="R1 R2 R3" planNeeded="elite"/>
+              }
             </div>
           )}
 
@@ -1410,6 +2375,7 @@ function TrackerApp({ user, onLogout }) {
   });
 
   const renderAdd = sKey => (
+    planHas(plan,"reorder") ? (
     <div style={{display:"flex",gap:8,marginTop:6,marginBottom:10}}>
       <input value={addInputs[sKey]||""}
         onChange={e=>setAddInputs(a=>({...a,[sKey]:e.target.value}))}
@@ -1422,6 +2388,16 @@ function TrackerApp({ user, onLogout }) {
           padding:"9px 16px",fontSize:"0.78rem",cursor:"pointer",fontWeight:700,
           whiteSpace:"nowrap",boxShadow:`0 2px 8px ${subject.color}45`}}>+ Add</button>
     </div>
+    ) : (
+    <div onClick={openUpgrade} style={{display:"flex",alignItems:"center",gap:8,marginTop:6,marginBottom:10,
+      background:T.card2,border:`1.5px dashed ${T.borderDashed}`,borderRadius:10,padding:"9px 13px",
+      cursor:"pointer",opacity:0.7,transition:"opacity 0.15s"}}
+      onMouseOver={e=>e.currentTarget.style.opacity="1"} onMouseOut={e=>e.currentTarget.style.opacity="0.7"}>
+      <span style={{fontSize:"0.79rem",color:T.muted}}>🔒 Add custom chapters…</span>
+      <span style={{marginLeft:"auto",background:"#fffbeb",color:"#b45309",border:"1px solid #fde68a",
+        borderRadius:20,padding:"2px 8px",fontSize:"0.6rem",fontWeight:700,flexShrink:0}}>Supreme ↑</span>
+    </div>
+    )
   );
 
   return (
@@ -1444,12 +2420,28 @@ function TrackerApp({ user, onLogout }) {
               animation:"pulse 1s ease infinite"}}>Saving…</span>}
             {/* Dark toggle in subject view */}
             <DarkToggle/>
-            <button onClick={()=>{setReorderMode(r=>!r);setFilter("all");setFilterPri("all");setFilterClass("all");}}
+            <button className="tut-help-btn" onClick={()=>setShowTutorial(true)} title="Open Tutorial">❓</button>
+            {/* Plan badge in subject header */}
+            <button onClick={()=>setShowPlanModal(true)}
+              title="Manage Plan"
+              style={{display:"flex",alignItems:"center",gap:3,
+                background:plan==="supreme"?(dm?"rgba(180,83,9,0.15)":"#fffbeb"):T.btn,
+                color:plan==="free"?"#9ca3af":plan==="pro"?"#2563eb":plan==="elite"?"#7c3aed":"#b45309",
+                border:`1.5px solid ${T.borderBtn}`,
+                borderRadius:8,padding:"5px 10px",fontSize:"0.65rem",cursor:"pointer",fontWeight:700}}>
+              {plan==="free"?"📖":plan==="pro"?"⚡":plan==="elite"?"🏆":"👑"}
+            </button>
+            <button
               style={{background:reorderMode?subject.color:T.btn,
                 color:reorderMode?"#fff":T.secondary,
                 border:reorderMode?"none":`1.5px solid ${T.borderBtn}`,
-                borderRadius:8,padding:"5px 14px",fontSize:"0.72rem",cursor:"pointer",fontWeight:600}}>
-              {reorderMode?"✓ Done":"⇅ Reorder"}</button>
+                borderRadius:8,padding:"5px 14px",fontSize:"0.72rem",cursor:"pointer",fontWeight:600,
+                opacity:planHas(plan,"reorder")?1:0.55}}
+              onClick={()=>{
+                if(!planHas(plan,"reorder")){openUpgrade();return;}
+                setReorderMode(r=>!r);setFilter("all");setFilterPri("all");setFilterClass("all");
+              }}>
+              {reorderMode?"✓ Done":`⇅ Reorder${planHas(plan,"reorder")?"":" 🔒"}`}</button>
           </div>
         </div>
 
@@ -1465,6 +2457,32 @@ function TrackerApp({ user, onLogout }) {
           <span style={{color:subject.text,fontWeight:600}}>{sp.pct}% complete</span>
         </div>
       </div>
+
+      {/* IBS Resource Link Banner */}
+      {subject.resourceLink&&(
+        <a href={subject.resourceLink.url} target="_blank" rel="noopener noreferrer"
+          style={{display:"flex",alignItems:"center",gap:12,
+            background:dm?"rgba(124,45,18,0.18)":"#fff7ed",
+            borderBottom:`1.5px solid ${dm?"rgba(154,52,18,0.4)":"#fed7aa"}`,
+            padding:"10px 16px",textDecoration:"none",transition:"background 0.18s"}}>
+          <div style={{width:32,height:32,borderRadius:8,flexShrink:0,
+            background:dm?"rgba(154,52,18,0.3)":"#ffedd5",
+            border:`1.5px solid ${dm?"rgba(154,52,18,0.5)":"#fdba74"}`,
+            display:"flex",alignItems:"center",justifyContent:"center",fontSize:"0.9rem"}}>
+            📄
+          </div>
+          <div style={{flex:1,minWidth:0}}>
+            <div style={{fontSize:"0.74rem",fontWeight:600,color:"#9a3412",
+              overflow:"hidden",textOverflow:"ellipsis",whiteSpace:"nowrap"}}>
+              {subject.resourceLink.label}
+            </div>
+            <div style={{fontSize:"0.6rem",color:dm?"#c2410c":"#b45309",marginTop:1,opacity:0.85}}>
+              icai.org · Tap to open ↗
+            </div>
+          </div>
+          <span style={{color:dm?"#c2410c":"#9a3412",fontSize:"0.8rem",flexShrink:0}}>↗</span>
+        </a>
+      )}
 
       {/* Filter bar */}
       {!reorderMode&&(
@@ -1491,7 +2509,7 @@ function TrackerApp({ user, onLogout }) {
             <span style={{fontSize:"0.6rem",color:T.muted,fontWeight:600,
               letterSpacing:"0.08em",textTransform:"uppercase",
               alignSelf:"center",flexShrink:0,paddingRight:2}}>Priority</span>
-            {[
+            {planHas(plan,"advFilters") ? [
               ["all","All",T.subtle,T.card,T.borderBtn],
               ["high","🔴 High","#b91c1c","#fef2f2","#fecaca"],
               ["medium","🟡 Med","#92400e","#fffbeb","#fde68a"],
@@ -1510,13 +2528,20 @@ function TrackerApp({ user, onLogout }) {
                   {l}
                 </button>
               );
-            })}
+            }) : (
+              <button onClick={openUpgrade}
+                style={{background:"#f5f3ff",color:"#7c3aed",border:"1px solid #ddd6fe",
+                  borderRadius:20,padding:"4px 12px",fontSize:"0.68rem",cursor:"pointer",
+                  whiteSpace:"nowrap",fontWeight:500,flexShrink:0}}>
+                🔒 Priority Filter — Elite ↑
+              </button>
+            )}
           </div>
           <div style={{display:"flex",gap:5,overflowX:"auto",paddingBottom:2,marginTop:6}}>
             <span style={{fontSize:"0.6rem",color:T.muted,fontWeight:600,
               letterSpacing:"0.08em",textTransform:"uppercase",
               alignSelf:"center",flexShrink:0,paddingRight:2}}>Classes</span>
-            {[
+            {planHas(plan,"classAttend") ? [
               ["all","All",T.subtle,T.card,T.borderBtn],
               ["attended","🎓 Attended","#047857","#ecfdf5","#a7f3d0"],
               ["notyet","⏳ Not Yet","#b45309","#fffbeb","#fde68a"],
@@ -1534,7 +2559,14 @@ function TrackerApp({ user, onLogout }) {
                   {l}
                 </button>
               );
-            })}
+            }) : (
+              <button onClick={openUpgrade}
+                style={{background:"#eff6ff",color:"#2563eb",border:"1px solid #bfdbfe",
+                  borderRadius:20,padding:"4px 12px",fontSize:"0.68rem",cursor:"pointer",
+                  whiteSpace:"nowrap",fontWeight:500,flexShrink:0}}>
+                🔒 Class Filter — Pro ↑
+              </button>
+            )}
           </div>
         </div>
       )}
@@ -1575,6 +2607,8 @@ function TrackerApp({ user, onLogout }) {
 
       {editingName&&<EditNameModal/>}
       {logoutConfirm&&<LogoutModal/>}
+      {showTutorial&&<TutorialOverlay onClose={()=>setShowTutorial(false)} username={user.username}/>}
+      {showPlanModal&&<SubscriptionModal onClose={()=>setShowPlanModal(false)}/>}
 
       {/* Note Modal */}
       {noteModal&&(
@@ -1622,6 +2656,18 @@ function Root() {
     try { return localStorage.getItem('cafinal_dark') === 'true'; } catch(e) { return false; }
   });
 
+  // Plan state — per user, stored in localStorage
+  const [plan, setPlanState] = useState("free");
+  const [showPlanModal, setShowPlanModal] = useState(false);
+
+  const activatePlan = (planId) => {
+    setPlanState(planId);
+    if (currentUser) {
+      try { localStorage.setItem(`cafinal_plan:${currentUser.username}`, planId); } catch(e) {}
+    }
+  };
+  const openUpgrade = () => setShowPlanModal(true);
+
   const toggleDark = () => setDarkMode(d => !d);
 
   useEffect(() => {
@@ -1634,17 +2680,31 @@ function Root() {
     if (sess && sess.username && sess.name) {
       setCurrentUser(sess);
       setAuthState("app");
+      // Load plan for this user
+      try {
+        const savedPlan = localStorage.getItem(`cafinal_plan:${sess.username}`) || 'free';
+        setPlanState(savedPlan);
+      } catch(e) {}
     } else {
       setAuthState("auth");
     }
   }, []);
 
-  const handleLogin = user => { sessionSet(user); setCurrentUser(user); setAuthState("app"); };
-  const handleLogout = () => { setCurrentUser(null); setAuthState("auth"); };
+  const handleLogin = user => {
+    sessionSet(user);
+    setCurrentUser(user);
+    setAuthState("app");
+    try {
+      const savedPlan = localStorage.getItem(`cafinal_plan:${user.username}`) || 'free';
+      setPlanState(savedPlan);
+    } catch(e) {}
+  };
+  const handleLogout = () => { setCurrentUser(null); setPlanState("free"); setAuthState("auth"); };
 
   const T = getT(darkMode);
 
   if (authState==="checking") return (
+    <PlanContext.Provider value={{ plan, activatePlan, openUpgrade }}>
     <ThemeContext.Provider value={{ darkMode, toggleDark }}>
       <div style={{display:"flex",alignItems:"center",justifyContent:"center",
         height:"100vh",background:T.page,flexDirection:"column",gap:12,transition:"background 0.25s"}}>
@@ -1653,15 +2713,19 @@ function Root() {
         <div style={{color:T.muted,fontSize:"0.8rem"}}>Loading…</div>
       </div>
     </ThemeContext.Provider>
+    </PlanContext.Provider>
   );
 
   return (
+    <PlanContext.Provider value={{ plan, activatePlan, openUpgrade }}>
     <ThemeContext.Provider value={{ darkMode, toggleDark }}>
       {authState==="auth"
         ? <AuthScreen onLogin={handleLogin}/>
         : <TrackerApp user={currentUser} onLogout={handleLogout}/>
       }
+      {showPlanModal && <SubscriptionModal onClose={() => setShowPlanModal(false)} />}
     </ThemeContext.Provider>
+    </PlanContext.Provider>
   );
 }
 
